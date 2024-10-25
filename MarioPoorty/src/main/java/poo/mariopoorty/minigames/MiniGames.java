@@ -5,8 +5,9 @@
 package poo.mariopoorty.minigames;
 
 import java.util.ArrayList;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
 import poo.mariopoorty.Player;
+
 
 /**
  *
@@ -17,7 +18,15 @@ public abstract class MiniGames {
     public String type;
     public String description;
     public int currentPlayers;
-    public JPanel gamePanel;
+    public JFrame gamePanel;
+
+    public MiniGames(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel) {
+        this.players = players;
+        this.type = type;
+        this.description = description;
+        this.currentPlayers = currentPlayers;
+        this.gamePanel = gamePanel;
+    }
     
     
     abstract void  startGame();

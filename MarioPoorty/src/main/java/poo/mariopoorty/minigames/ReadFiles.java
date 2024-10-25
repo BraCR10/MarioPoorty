@@ -15,19 +15,19 @@ import java.util.List;
  * @author Brian
  */
 public class ReadFiles {
+    static String projectPath ="C:\\Users\\User\\Documents\\MarioPoorty\\MarioPoorty\\src\\main\\java\\poo\\mariopoorty\\files\\";
+
     // Method to read words from a text file
-    public static void readWords() {
+    public static void readWords(String filePath,ArrayList<String> wordsList) {
         // Path to the text file
-        String globalPath ="C:\\Users\\Brian\\Documents\\MarioPoorty\\MarioPoorty\\src\\main\\java\\poo\\mariopoorty\\files\\";
-        String filePath = globalPath+"words.txt";
+        String path = projectPath+filePath;
 
         // List to store words read from the file
-        List<String> wordsList = new ArrayList<>();
         FileReader file;
         BufferedReader reader;
         
         try {
-            file = new FileReader(filePath);
+            file = new FileReader(path);
             String line;
             
             if (file.ready()) {
@@ -39,9 +39,6 @@ public class ReadFiles {
                reader.close();
             }
             
-            for (String string : wordsList) {
-                System.out.println(string);
-            }
 
         } catch (IOException e) {
             System.out.println("An error occurred while reading the file: " + e.getMessage());
