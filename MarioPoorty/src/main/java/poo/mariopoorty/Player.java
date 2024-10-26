@@ -9,5 +9,19 @@ package poo.mariopoorty;
  * @author Brian
  */
 public class Player {
+    int pts;
+
+    public Player(int pts) {
+        this.pts = pts;
+    }
+
+    public int getPts() {
+        return pts;
+    }
+
+    public void setPts(int pts) {
+        this.pts = pts;
+    }
+    
     
 }

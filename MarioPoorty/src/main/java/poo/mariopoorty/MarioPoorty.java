@@ -4,7 +4,7 @@
 
 package poo.mariopoorty;
 
-import Screens.wordSearchScreen;
+import Screens.WordSearchScreen;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import poo.mariopoorty.minigames.MiniGames;
@@ -17,13 +17,14 @@ import poo.mariopoorty.minigames.WordSearch;
 public class MarioPoorty {
 
     public static void main(String[] args) {
-        JFrame wordSearchScreen = new wordSearchScreen();
+        JFrame wordSearchScreen = new WordSearchScreen();
         ArrayList<Player> players = new ArrayList();
-        MiniGames miniGame;
         
-        miniGame = new WordSearch(players,"","",4,wordSearchScreen);
-        wordSearchScreen.setVisible(true);
-       miniGame.startGame();
+        MiniGames miniGame = new WordSearch(players,"Search Word","Play alone",1,wordSearchScreen);
+        
+        players.add(new Player(0));
+        miniGame.startGame();
+        miniGame.playTurn(players.get(0));
         
     
         

@@ -15,7 +15,7 @@ import java.util.List;
  * @author Brian
  */
 public class ReadFiles {
-    static String projectPath ="C:\\Users\\User\\Documents\\MarioPoorty\\MarioPoorty\\src\\main\\java\\poo\\mariopoorty\\files\\";
+    static String projectPath ="C:\\Users\\Brian\\Documents\\MarioPoorty\\MarioPoorty\\src\\main\\java\\poo\\mariopoorty\\files\\";
 
     // Method to read words from a text file
     public static void readWords(String filePath,ArrayList<String> wordsList) {
