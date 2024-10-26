@@ -164,10 +164,10 @@ public class WordSearch extends MiniGames{
             WordSearchScreen screen = (WordSearchScreen) gamePanel;
             screen.setBoardSize(boardDisplaySize);
             screen.setBoardChars(board);
-            screen.setWord1(selectedWordsList.get(0));
-            screen.setWord2(selectedWordsList.get(1));
-            screen.setWord3(selectedWordsList.get(2));
-            screen.setWord4(selectedWordsList.get(3));
+            screen.setWord1("1. "+selectedWordsList.get(0));
+            screen.setWord2("2. "+selectedWordsList.get(1));
+            screen.setWord3("3. "+selectedWordsList.get(2));
+            screen.setWord4("4. "+selectedWordsList.get(3));
             screen.drawScreen();
             Thread timer = new threadTimerWordSearch(this,screen);
             timer.start();
