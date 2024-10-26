@@ -4,10 +4,13 @@
  */
 package poo.mariopoorty.minigames;
 
+import Screens.wordSearchScreen;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import poo.mariopoorty.Player;
 
@@ -15,38 +18,33 @@ import poo.mariopoorty.Player;
  *
  * @author Brian
  */
-public class WordSearch {
-    static ArrayList<String> wordsList;
-    static char[][] board;
+public class WordSearch extends MiniGames{
+    ArrayList<String> wordsList;
+    ArrayList<String> selectedWordsList;
+    char[][] board;
     static Random randomNumber; 
-    static Set<Integer> randomWordsPositions ;
-    static int boardDisplaySize;
+    Set<Integer> randomWordsPositions ;
+    int boardDisplaySize;
     static int[] enableSize={10,15,20};
+    
 
-    public WordSearch() {
-        //super(players, type, description, currentPlayers, gamePanel);
+  
+
+    public WordSearch(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel) {
+        super(players, type, description, currentPlayers,gamePanel);
         
         randomNumber = new Random();
-        randomWordsPositions= new HashSet<>();
-        
-        wordsList = new ArrayList<>();
-        loadWords();
-        
-        // randomWordsPositions
+        this.randomWordsPositions= new HashSet<>();
         chooseRandomWordsPosition();
         
-        //Get a random size 
-        boardDisplaySize=randomNumber.nextInt(0,2);
-        boardDisplaySize=enableSize[boardDisplaySize];  
-        board = new char[boardDisplaySize][boardDisplaySize];
+        this.wordsList = new ArrayList<>();
+        loadWords();
         
-        generateBoard();
+        this.selectedWordsList = new ArrayList<>();
+        this.boardDisplaySize=randomNumber.nextInt(0,2);
+        this.boardDisplaySize=enableSize[boardDisplaySize];  
+        this.board = new char[boardDisplaySize][boardDisplaySize];
         
-        for (int i = 0; i < boardDisplaySize; i++) {
-            for (int j = 0; j < boardDisplaySize; j++) {
-                System.out.println(board[i][j]);
-            }
-        }
     }
    
     private void generateBoard(){
@@ -57,8 +55,10 @@ public class WordSearch {
         }
         
         String word;
+        
         for (int i : randomWordsPositions) {
-            word=wordsList.get(i);
+            word=this.wordsList.get(i);
+            this.selectedWordsList.add(word);
             placeWord(word);
         }
         
@@ -153,31 +153,87 @@ public class WordSearch {
         }
     }
    
-    /*
-    @Override
-    void startGame() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    void endGame() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    void playTurn(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }*/
-    
-    private static void chooseRandomWordsPosition(){
+    private  void chooseRandomWordsPosition(){
         //Get 4 random words 
-        while (randomWordsPositions.size()<4) {
-             randomWordsPositions.add(randomNumber.nextInt(100));
+        while (this.randomWordsPositions.size()<4) {
+             this.randomWordsPositions.add(randomNumber.nextInt(100));
         }
     }
     
-    private static void loadWords(){
-        ReadFiles.readWords("words.txt", wordsList);
+    private  void loadWords(){
+        ReadFiles.readWords("words.txt", this.wordsList);
     }
+    
+    private void startBoard(){
+        try {
+            wordSearchScreen screen = (wordSearchScreen) gamePanel;
+            screen.setBoardSize(boardDisplaySize);
+            screen.setBoardChars(board);
+            screen.setWord1(selectedWordsList.get(0));
+            screen.setWord2(selectedWordsList.get(1));
+            screen.setWord3(selectedWordsList.get(2));
+            screen.setWord4(selectedWordsList.get(3));
+            screen.drawScreen();
+            
+        } catch (Exception e) {
+            throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+        
+        
+        
+    }
+    
+    @Override
+    public void startGame() {
+        generateBoard();
+        startBoard();
+    }
+
+    @Override
+    public void endGame() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void playTurn(Player player) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public char[][] getBoard() {
+        return board;
+    }
+    
+    
+    private static String bufferWordsSeleted="";
+    private static ArrayList<javax.swing.JButton> pressedButtons = new ArrayList<>();
+    private static ArrayList<javax.swing.JButton> correctButtons = new ArrayList<>();
+    public static void wordsChecker(javax.swing.JButton sourceButton){
+        // Check if the button has already been pressed
+        if (!pressedButtons.contains(sourceButton)) {
+            // Append the button's text to the buffer
+            bufferWordsSeleted += sourceButton.getText();
+            // Add the button to the pressed list
+            pressedButtons.add(sourceButton);
+        }
+    }
+    
+     public static void checkSeletedWord(String w1,String w2,String w3,String w4 ){
+         if(bufferWordsSeleted.equals(w4)||
+            bufferWordsSeleted.equals(w3)||
+            bufferWordsSeleted.equals(w2)||
+            bufferWordsSeleted.equals(w1)){
+             for (JButton pressedButton : pressedButtons) {
+                 correctButtons.add(pressedButton);
+             }
+
+            
+        }
+        for (JButton correctButton : correctButtons) {
+             correctButton.setBackground(Color.YELLOW);
+         }
+        pressedButtons.clear();
+        bufferWordsSeleted="";
+     }
+ 
 }
 

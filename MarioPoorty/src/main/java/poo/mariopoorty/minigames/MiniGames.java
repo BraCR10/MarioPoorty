@@ -29,9 +29,9 @@ public abstract class MiniGames {
     }
     
     
-    abstract void  startGame();
-    abstract  void  endGame();
-    abstract void playTurn(Player player);
+    public abstract void  startGame();
+    public abstract  void  endGame();
+    public abstract void playTurn(Player player);
     
             
 }
