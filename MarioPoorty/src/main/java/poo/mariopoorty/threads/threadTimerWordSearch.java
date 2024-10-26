@@ -29,7 +29,7 @@ public class threadTimerWordSearch extends Thread{
         while (isRunning) {
             
             try {
-                screen.setTimer(screen.getTimer()-1);
+                screen.setTimer(screen.getTimer()-0.01);
                 sleep(1000);
                 
                 if(screen.getTimer()<=0 ){

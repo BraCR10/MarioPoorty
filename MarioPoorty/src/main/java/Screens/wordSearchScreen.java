@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.TextField;
 import javax.swing.*;
 import poo.mariopoorty.minigames.WordSearch;
 
