@@ -15,11 +15,12 @@ public class WordSearchScreen extends javax.swing.JFrame {
     private char[][] boardChars;
     private String word1,word2,word3,word4;
     public double timer;
+
     //TIMMER
     JTextField timerLabel;
     
     public WordSearchScreen() {
-       this.timer=2;   
+       this.timer=120;   
     }
 
     private void initComponents() {
@@ -65,10 +66,10 @@ public class WordSearchScreen extends javax.swing.JFrame {
          JLabel word3Label;
          JLabel word4Label; 
         
-         word1Label = new JLabel(word1);
-         word2Label = new JLabel(word2);
-         word3Label = new JLabel(word3);
-         word4Label = new JLabel(word4);
+         word1Label = new JLabel("1. "+word1);
+         word2Label = new JLabel("2. "+word2);
+         word3Label = new JLabel("3. "+word3);
+         word4Label = new JLabel("4. "+word4);
 
         
         word1Label.setForeground(Color.WHITE);

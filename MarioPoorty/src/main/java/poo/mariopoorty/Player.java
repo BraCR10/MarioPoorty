@@ -1,27 +1,103 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package poo.mariopoorty;
 
-/**
- *
- * @author Brian
- */
-public class Player {
-    int pts;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import poo.mariopoorty.minigames.MiniGames;
+import poo.mariopoorty.minigames.WordSearch;
 
-    public Player(int pts) {
-        this.pts = pts;
-    }
 
-    public int getPts() {
-        return pts;
-    }
-
-    public void setPts(int pts) {
-        this.pts = pts;
-    }
+public class Player implements Runnable{
+    public Socket socket;
+    
+    public DataOutputStream out;
+    public DataInputStream in;
+    public Board board;
+    public JFrame miniGameScreen=null;
+    
+    public int Position;
+    public String Condition;
+    public boolean isMyTurn = false;
+    
+    public String name;
+    private Thread thread;
+   
     
     
+    
+    
+    public Player() {
+        try {
+            this.socket = new Socket("localhost", 123);
+            this.out = new DataOutputStream(socket.getOutputStream());
+            this.in = new DataInputStream(socket.getInputStream());
+            
+            this.board = new Board(this, ReadGameBoard());   
+            
+            this.thread = new Thread(this, "Game");
+            this.thread.start();
+        
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private String[] ReadGameBoard(){
+        System.out.println("Reading Board....\n");
+
+        try {
+           
+            String serializedArray = in.readUTF();
+            String[] receivedArray = serializedArray.split(",");
+            System.out.println("Read it...");
+            return receivedArray;
+            
+        } catch (Exception e) { 
+            String[] receivedArray = new String[28];
+            return receivedArray;
+        }
+    }
+    public static void main(String[] args) {
+        new Player();
+    }
+ 
+    
+    @Override
+    public void run() {
+        
+        try{
+            while (true) {
+                System.out.println("Begginig theard...\n");
+                String serverMessage = in.readUTF();
+                System.out.println(serverMessage);
+
+                if (serverMessage.equals("Your Turn")) {
+                    isMyTurn=true;
+                    initSearchWord();
+                    
+                    
+                }
+
+                this.board.updateBoard();
+            }
+        } catch (IOException e){
+            System.out.println("error...\n");
+        }
+    }
+    
+    void initSearchWord(){
+
+        //Test
+        MiniGames miniGame = new WordSearch("Search Word","Play alone",1,miniGameScreen,board);
+
+        miniGame.startGame();
+        miniGame.playTurn(this);
+    }
+
 }

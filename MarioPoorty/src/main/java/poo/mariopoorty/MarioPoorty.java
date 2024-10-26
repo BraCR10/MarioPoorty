@@ -17,14 +17,9 @@ import poo.mariopoorty.minigames.WordSearch;
 public class MarioPoorty {
 
     public static void main(String[] args) {
-        JFrame wordSearchScreen = new WordSearchScreen();
-        ArrayList<Player> players = new ArrayList();
         
-        MiniGames miniGame = new WordSearch(players,"Search Word","Play alone",1,wordSearchScreen);
+        new GameServer();
         
-        players.add(new Player(0));
-        miniGame.startGame();
-        miniGame.playTurn(players.get(0));
         
     
         

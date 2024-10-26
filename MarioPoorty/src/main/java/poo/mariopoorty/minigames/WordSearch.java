@@ -7,13 +7,12 @@ package poo.mariopoorty.minigames;
 import poo.mariopoorty.screens.WordSearchScreen;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
-import poo.mariopoorty.threads.threadTimerWordSearch;
+import poo.mariopoorty.threads.ThreadTimerWordSearch;
 
 /**
  *
@@ -22,14 +21,16 @@ import poo.mariopoorty.threads.threadTimerWordSearch;
 public class WordSearch extends MiniGames{
     ArrayList<String> wordsList;
     ArrayList<String> selectedWordsList;
-    char[][] board;
+    char[][] matrizChars;
     int boardDisplaySize;
     static int[] enableSize={10,15,20};
     static Random randomNumber; 
+    Board board;
     Player gamePlayer;
 
-    public WordSearch(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel) {
-        super(players, type, description, currentPlayers,gamePanel);
+    public WordSearch( String type, String description, int currentPlayers, JFrame gamePanel,Board board) {
+        super( type, description, currentPlayers,gamePanel);
+        this.board=board;
         this.wordsList = new ArrayList<>();
         loadWords();
         
@@ -40,14 +41,14 @@ public class WordSearch extends MiniGames{
         this.boardDisplaySize=randomNumber.nextInt(0,2);
         this.boardDisplaySize=enableSize[boardDisplaySize];
    
-        this.board = new char[boardDisplaySize][boardDisplaySize];
+        this.matrizChars = new char[boardDisplaySize][boardDisplaySize];
         
     }
    
     private void generateBoard(){
         for (int i = 0; i < boardDisplaySize; i++) {
             for (int j = 0; j < boardDisplaySize; j++) {
-                board[i][j] = ' '; 
+                matrizChars[i][j] = ' '; 
             }
         }
         
@@ -59,8 +60,8 @@ public class WordSearch extends MiniGames{
         
         for (int i = 0; i < boardDisplaySize; i++) {
             for (int j = 0; j < boardDisplaySize; j++) {
-                 if (board[i][j] == ' ') 
-                    board[i][j] = (char) ('A'+randomNumber.nextInt(26) ); //A - Z
+                 if (matrizChars[i][j] == ' ') 
+                    matrizChars[i][j] = (char) ('A'+randomNumber.nextInt(26) ); //A - Z
             }
         }
     
@@ -82,7 +83,7 @@ public class WordSearch extends MiniGames{
                     if (col + length <= boardDisplaySize) {
                         canPlace = true; 
                         for (int j = 0; j < length; j++) {
-                            if (board[row][col + j] != ' ') { // Check if each position is empty
+                            if (matrizChars[row][col + j] != ' ') { // Check if each position is empty
                                 canPlace = false; 
                                 break;
                             }
@@ -90,7 +91,7 @@ public class WordSearch extends MiniGames{
 
                         if (canPlace) {
                             for (int j = 0; j < length; j++) {
-                                board[row][col + j] = word.charAt(j); 
+                                matrizChars[row][col + j] = word.charAt(j); 
                             }
                             placed = true; 
                         }
@@ -101,7 +102,7 @@ public class WordSearch extends MiniGames{
                     if (row + length <= boardDisplaySize) {
                          canPlace = true;
                         for (int j = 0; j < length; j++) {
-                            if (board[row + j][col] != ' ') {
+                            if (matrizChars[row + j][col] != ' ') {
                                 canPlace = false; 
                                 break;
                             }
@@ -109,7 +110,7 @@ public class WordSearch extends MiniGames{
 
                         if (canPlace) {
                             for (int j = 0; j < length; j++) {
-                                board[row + j][col] = word.charAt(j); 
+                                matrizChars[row + j][col] = word.charAt(j); 
                             }
                             placed = true; 
                         }
@@ -121,7 +122,7 @@ public class WordSearch extends MiniGames{
                     if (row + length <= boardDisplaySize && col + length <= boardDisplaySize) {
                         canPlace = true; 
                         for (int j = 0; j < length; j++) {
-                            if (board[row + j][col + j] != ' ') {
+                            if (matrizChars[row + j][col + j] != ' ') {
                                 canPlace = false; 
                                 break;
                             }
@@ -129,7 +130,7 @@ public class WordSearch extends MiniGames{
 
                         if (canPlace) {
                             for (int j = 0; j < length; j++) {
-                                board[row + j][col + j] = word.charAt(j); 
+                                matrizChars[row + j][col + j] = word.charAt(j); 
                             }
                             placed = true; 
                         }
@@ -161,15 +162,16 @@ public class WordSearch extends MiniGames{
     
     private void startBoard(){
         try {
+            board.setVisible(false);
             WordSearchScreen screen = (WordSearchScreen) gamePanel;
             screen.setBoardSize(boardDisplaySize);
-            screen.setBoardChars(board);
-            screen.setWord1("1. "+selectedWordsList.get(0));
-            screen.setWord2("2. "+selectedWordsList.get(1));
-            screen.setWord3("3. "+selectedWordsList.get(2));
-            screen.setWord4("4. "+selectedWordsList.get(3));
+            screen.setBoardChars(matrizChars);
+            screen.setWord1(selectedWordsList.get(0));
+            screen.setWord2(selectedWordsList.get(1));
+            screen.setWord3(selectedWordsList.get(2));
+            screen.setWord4(selectedWordsList.get(3));
             screen.drawScreen();
-            Thread timer = new threadTimerWordSearch(this,screen);
+            Thread timer = new ThreadTimerWordSearch(this,screen);
             timer.start();
             
         } catch (Exception e) {
@@ -182,6 +184,7 @@ public class WordSearch extends MiniGames{
     
     @Override
     public void startGame() {
+        gamePanel=new WordSearchScreen();
         generateBoard();
         startBoard();
         gamePanel.setVisible(true);
@@ -190,6 +193,7 @@ public class WordSearch extends MiniGames{
     @Override
     public void endGame() {
         //Example
+        /*
         if(WordSearch.getCounterCollectedWords()<4){
             for (Player player : players) {
                 if(player==gamePlayer)
@@ -201,13 +205,13 @@ public class WordSearch extends MiniGames{
                     player.setPts(10);
             }
             
-        }
+        }*/
         //Cleanning static vars
         WordSearch.correctButtons.clear();
         WordSearch.pressedButtons.clear();
         WordSearch.bufferWordsSeleted="";
         WordSearch.counterCollectedWords=0;
-        
+        board.setVisible(true);
         //Deleting the screen
         gamePanel.dispose();
     }
@@ -228,6 +232,7 @@ public class WordSearch extends MiniGames{
         }
     }
     public static void checkSeletedWord(String w1,String w2,String w3,String w4 ){
+         
          if(bufferWordsSeleted.equals(w4)||
             bufferWordsSeleted.equals(w3)||
             bufferWordsSeleted.equals(w2)||

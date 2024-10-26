@@ -12,12 +12,12 @@ import poo.mariopoorty.minigames.WordSearch;
  *
  * @author Brian
  */
-public class threadTimerWordSearch extends Thread{
+public class ThreadTimerWordSearch extends Thread{
     boolean isRunning ;
     boolean isPaused ;
     WordSearch  wordSearch;
     WordSearchScreen  screen;
-    public threadTimerWordSearch(WordSearch  wordSearch,WordSearchScreen  screen) {
+    public ThreadTimerWordSearch(WordSearch  wordSearch,WordSearchScreen  screen) {
         isPaused=false;
         isRunning=true;
         this.wordSearch=wordSearch;
@@ -29,7 +29,9 @@ public class threadTimerWordSearch extends Thread{
         while (isRunning) {
             
             try {
-                screen.setTimer(screen.getTimer()-0.01);
+               
+                
+                screen.setTimer((screen.getTimer()-1));
                 sleep(1000);
                 
                 if(screen.getTimer()<=0 ){
@@ -39,7 +41,7 @@ public class threadTimerWordSearch extends Thread{
                     wordSearch.endGame();
                     isRunning=false;
                 }
-                if(WordSearch.getCounterCollectedWords()>=4 ){
+                if(wordSearch.getCounterCollectedWords()>=4 ){
                     screen.getTimerLabel().setText(" You won!!!");
                     screen.getTimerLabel().setBackground(Color.GREEN);
                     sleep(2000);
