@@ -4,7 +4,7 @@
  */
 package poo.mariopoorty.threads;
 
-import Screens.WordSearchScreen;
+import poo.mariopoorty.screens.WordSearchScreen;
 import java.awt.Color;
 import poo.mariopoorty.minigames.WordSearch;
 

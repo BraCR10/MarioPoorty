@@ -4,7 +4,7 @@
 
 package poo.mariopoorty;
 
-import Screens.WordSearchScreen;
+import poo.mariopoorty.screens.WordSearchScreen;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import poo.mariopoorty.minigames.MiniGames;

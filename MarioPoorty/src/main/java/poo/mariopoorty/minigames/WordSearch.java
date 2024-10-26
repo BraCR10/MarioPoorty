@@ -4,7 +4,7 @@
  */
 package poo.mariopoorty.minigames;
 
-import Screens.WordSearchScreen;
+import poo.mariopoorty.screens.WordSearchScreen;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
