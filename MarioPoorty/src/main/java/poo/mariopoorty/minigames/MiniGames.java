@@ -16,14 +16,21 @@ import poo.mariopoorty.Player;
  * @author Brian
  */
 public abstract class MiniGames {
-    //public ArrayList<DataOutputStream[]> players;
+    public ArrayList<Player> players;
     public String type;
     public String description;
     public int currentPlayers;
     public JFrame gamePanel;
 
     public MiniGames( String type, String description, int currentPlayers, JFrame gamePanel) {
-        //this.players = players;
+        this.type = type;
+        this.description = description;
+        this.currentPlayers = currentPlayers;
+        this.gamePanel = gamePanel;
+    }
+
+    public MiniGames(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel) {
+        this.players = players;
         this.type = type;
         this.description = description;
         this.currentPlayers = currentPlayers;

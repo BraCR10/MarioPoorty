@@ -159,7 +159,7 @@ public class WordSearchScreen extends javax.swing.JFrame {
 
     public void setTimer(double timer) {
         this.timer = timer;
-        timerLabel.setText(String.format("Time: %.2f mins", timer));
+        timerLabel.setText(String.format("Time: %.2f mins", timer/60));
     }
 
     public JTextField getTimerLabel() {

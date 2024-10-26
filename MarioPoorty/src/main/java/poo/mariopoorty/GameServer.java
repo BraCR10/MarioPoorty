@@ -8,8 +8,7 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.StringJoiner;
-import poo.mariopoorty.minigames.MiniGames;
-import poo.mariopoorty.minigames.WordSearch;
+
 
 public class GameServer {
     private ServerSocket serverSocket;

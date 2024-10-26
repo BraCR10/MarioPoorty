@@ -42,7 +42,6 @@ public class WordSearch extends MiniGames{
         this.boardDisplaySize=enableSize[boardDisplaySize];
    
         this.matrizChars = new char[boardDisplaySize][boardDisplaySize];
-        
     }
    
     private void generateBoard(){
@@ -206,6 +205,7 @@ public class WordSearch extends MiniGames{
             }
             
         }*/
+        gamePlayer.isMyTurn=true; //play again
         //Cleanning static vars
         WordSearch.correctButtons.clear();
         WordSearch.pressedButtons.clear();
