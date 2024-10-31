@@ -23,27 +23,25 @@ public class WordSearch extends MiniGames{
     ArrayList<String> selectedWordsList;
     char[][] matrizChars;
     int boardDisplaySize;
-    static int[] enableSize={10,15,20};
-    static Random randomNumber; 
-    Board board;
+    static int[] enableSizes={10,15,20};
+    static Random randomNumber = new Random(); 
     Player gamePlayer;
 
-    public WordSearch( String type, String description, int currentPlayers, JFrame gamePanel,Board board) {
-        super( type, description, currentPlayers,gamePanel);
-        this.board=board;
+    public WordSearch( ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel, Board board) {
+        super(players, type, description, currentPlayers, gamePanel, board);
+        
         this.wordsList = new ArrayList<>();
         loadWords();
         
-        randomNumber = new Random();
         this.selectedWordsList = new ArrayList<>();
         chooseRandomWordsPosition();
         
         this.boardDisplaySize=randomNumber.nextInt(0,2);
-        this.boardDisplaySize=enableSize[boardDisplaySize];
+        this.boardDisplaySize=enableSizes[boardDisplaySize];
    
         this.matrizChars = new char[boardDisplaySize][boardDisplaySize];
     }
-   
+
     private void generateBoard(){
         for (int i = 0; i < boardDisplaySize; i++) {
             for (int j = 0; j < boardDisplaySize; j++) {
@@ -141,7 +139,6 @@ public class WordSearch extends MiniGames{
    
     private  void chooseRandomWordsPosition(){
         //Get 4 random words 
-        
         while (this.selectedWordsList.size()<4) {
              int number =randomNumber.nextInt(100);
              if(!selectedWordsList.contains(wordsList.get(number)))//to avoid the same word
@@ -161,7 +158,7 @@ public class WordSearch extends MiniGames{
     
     private void startBoard(){
         try {
-            board.setVisible(false);
+            this.board.setVisible(false);
             WordSearchScreen screen = (WordSearchScreen) gamePanel;
             screen.setBoardSize(boardDisplaySize);
             screen.setBoardChars(matrizChars);
@@ -183,49 +180,41 @@ public class WordSearch extends MiniGames{
     
     @Override
     public void startGame() {
-        gamePanel=new WordSearchScreen();
+        this.gamePanel=new WordSearchScreen();
         generateBoard();
         startBoard();
-        gamePanel.setVisible(true);
+        this.gamePanel.setVisible(true);
     }
 
     @Override
     public void endGame() {
-        //Example
-        /*
-        if(WordSearch.getCounterCollectedWords()<4){
-            for (Player player : players) {
-                if(player==gamePlayer)
-                    player.setPts(-10);
-            }
-        }else{
-            for (Player player : players) {
-                if(player==gamePlayer)
-                    player.setPts(10);
-            }
-            
-        }*/
-        gamePlayer.isMyTurn=true; //play again
         //Cleanning static vars
         WordSearch.correctButtons.clear();
         WordSearch.pressedButtons.clear();
         WordSearch.bufferWordsSeleted="";
         WordSearch.counterCollectedWords=0;
-        board.setVisible(true);
+        this.board.setVisible(true);
         //Deleting the screen
-        gamePanel.dispose();
+        this.gamePanel.dispose();
     }
 
     @Override
-    public void playTurn(Player player) {
-        gamePlayer=player;
+    public void playTurn() {
+        for (Player player : players) {
+            if (player.isMyTurn) {
+                player.isMyTurn=false;
+                player.miniGame.startGame();
+            }
+        }
     }
 
+    
+    //Methods to check words in the screen
     private static String bufferWordsSeleted="";
-    private static ArrayList<javax.swing.JButton> pressedButtons = new ArrayList<>();
-    private static ArrayList<javax.swing.JButton> correctButtons = new ArrayList<>();
+    private static final ArrayList<JButton> pressedButtons = new ArrayList<>();
+    private static final ArrayList<JButton> correctButtons = new ArrayList<>();
     private static int counterCollectedWords; //True for win and False for lose
-    public static void wordsChecker(javax.swing.JButton sourceButton){
+    public static void wordsChecker(JButton sourceButton){
         if (!pressedButtons.contains(sourceButton)) {
             bufferWordsSeleted += sourceButton.getText();
             pressedButtons.add(sourceButton);

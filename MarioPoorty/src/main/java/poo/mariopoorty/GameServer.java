@@ -27,7 +27,7 @@ public class GameServer {
         this.TypesList();
         
         try {
-            serverSocket = new ServerSocket(123); 
+            serverSocket = new ServerSocket(12); 
             Scanner scanner = new Scanner(System.in);
             
             while (!(2 <= NumPlayers && NumPlayers <= 6)) {

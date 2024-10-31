@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import poo.mariopoorty.minigames.MiniGames;
 import poo.mariopoorty.minigames.WordSearch;
 
@@ -20,7 +18,7 @@ public class Player implements Runnable{
     public DataOutputStream out;
     public DataInputStream in;
     public Board board;
-    public JFrame miniGameScreen=null;
+    
     
     public int Position;
     public String Condition;
@@ -28,14 +26,20 @@ public class Player implements Runnable{
     
     public String name;
     private Thread thread;
+    
+    public JFrame miniGameScreen=null;
+    public MiniGames miniGame ;
    
+    //TODO:DELETE
+    private static ArrayList<Player> players = new ArrayList<>();
+
     
     
     
     
     public Player() {
         try {
-            this.socket = new Socket("localhost", 123);
+            this.socket = new Socket("localhost", 12);
             this.out = new DataOutputStream(socket.getOutputStream());
             this.in = new DataInputStream(socket.getInputStream());
             
@@ -43,6 +47,10 @@ public class Player implements Runnable{
             
             this.thread = new Thread(this, "Game");
             this.thread.start();
+            
+            
+            //TODO
+            players.add(this);
         
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,12 +100,9 @@ public class Player implements Runnable{
     }
     
     void initSearchWord(){
-
         //Test
-        MiniGames miniGame = new WordSearch("Search Word","Play alone",1,miniGameScreen,board);
-
-        miniGame.startGame();
-        miniGame.playTurn(this);
+        miniGame = new WordSearch(players,"Search Word","Play alone",1,miniGameScreen,board);
+        miniGame.playTurn();
     }
 
 }

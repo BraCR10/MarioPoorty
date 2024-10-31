@@ -26,36 +26,40 @@ public class ThreadTimerWordSearch extends Thread{
 
     @Override
     public void run() {
+        int totalSeconds = 120; 
+        
+
         while (isRunning) {
-            
             try {
-               
-                
-                screen.setTimer((screen.getTimer()-1));
                 sleep(1000);
-                
-                if(screen.getTimer()<=0 ){
-                    screen.getTimerLabel().setText(" You lost!!!");
+                totalSeconds--; 
+
+                int minutes = totalSeconds / 60;
+                int seconds = totalSeconds % 60;
+                screen.getTimerLabel().setText(String.format("Time: %02d mins %02d segs", minutes, seconds));
+
+                if (totalSeconds <= 0) {
+                    screen.getTimerLabel().setText("You lost!!!");
                     screen.getTimerLabel().setBackground(Color.BLACK);
                     sleep(2000);
                     wordSearch.endGame();
-                    isRunning=false;
+                    isRunning = false;
                 }
-                if(wordSearch.getCounterCollectedWords()>=4 ){
-                    screen.getTimerLabel().setText(" You won!!!");
+
+                if (wordSearch.getCounterCollectedWords() >= 4) {
+                    screen.getTimerLabel().setText("You won!!!");
                     screen.getTimerLabel().setBackground(Color.GREEN);
                     sleep(2000);
                     wordSearch.endGame();
-                    isRunning=false;
+                    isRunning = false;
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace(); // Log the exception if it occurs
+                e.printStackTrace(); 
             }
 
-            // Pausing the thread
             while (isPaused) {
                 try {
-                    sleep(1000); // Sleep while paused, checking every second
+                    sleep(1000); 
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }

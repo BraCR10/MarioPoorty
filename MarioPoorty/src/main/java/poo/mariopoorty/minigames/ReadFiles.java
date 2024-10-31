@@ -7,39 +7,28 @@ package poo.mariopoorty.minigames;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author Brian
  */
 public class ReadFiles {
-    static String projectPath ="C:\\Users\\Brian\\Documents\\MarioPoorty\\MarioPoorty\\src\\main\\java\\poo\\mariopoorty\\files\\";
 
     // Method to read words from a text file
     public static void readWords(String filePath,ArrayList<String> wordsList) {
-        // Path to the text file
-        String path = projectPath+filePath;
-
-        // List to store words read from the file
-        FileReader file;
-        BufferedReader reader;
+ 
         
-        try {
-            file = new FileReader(path);
+       try (
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+            ReadFiles.class.getResourceAsStream("/poo/mariopoorty/files/" + filePath)))
+            ) {
             String line;
-            
-            if (file.ready()) {
-               reader = new BufferedReader(file); 
-               // Read lines from the file
-               while ((line = reader.readLine()) != null) {
-                   wordsList.add(line);
-                }
-               reader.close();
+            // Leer líneas del archivo
+            while ((line = reader.readLine()) != null) {
+                wordsList.add(line);
             }
-            
-
         } catch (IOException e) {
             System.out.println("An error occurred while reading the file: " + e.getMessage());
         }

@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 
 
@@ -21,26 +22,25 @@ public abstract class MiniGames {
     public String description;
     public int currentPlayers;
     public JFrame gamePanel;
+    public Board board;
 
-    public MiniGames( String type, String description, int currentPlayers, JFrame gamePanel) {
-        this.type = type;
-        this.description = description;
-        this.currentPlayers = currentPlayers;
-        this.gamePanel = gamePanel;
-    }
-
-    public MiniGames(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel) {
+    public MiniGames(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel, Board board) {
         this.players = players;
         this.type = type;
         this.description = description;
         this.currentPlayers = currentPlayers;
         this.gamePanel = gamePanel;
+        this.board = board;
     }
+
+
+
+    
     
     
     public abstract void  startGame();
     public abstract  void  endGame();
-    public abstract void playTurn(Player player);
+    public abstract void playTurn();
     
             
 }

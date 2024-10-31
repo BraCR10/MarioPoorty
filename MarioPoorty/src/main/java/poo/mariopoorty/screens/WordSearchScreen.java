@@ -7,20 +7,20 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import poo.mariopoorty.minigames.WordSearch;
 
-public class WordSearchScreen extends javax.swing.JFrame {
+public class WordSearchScreen extends JFrame {
     private int boardSize ;
-    private javax.swing.JButton[][] matrizButtons;
-    private javax.swing.JPanel jpBoard;
-    private javax.swing.JPanel screenPanel;
+    private JButton[][] matrizButtons;
+    private JPanel jpBoard;
+    private JPanel screenPanel;
     private char[][] boardChars;
     private String word1,word2,word3,word4;
-    public double timer;
+
 
     //TIMMER
     JTextField timerLabel;
     
     public WordSearchScreen() {
-       this.timer=120;   
+         
     }
 
     private void initComponents() {
@@ -60,16 +60,11 @@ public class WordSearchScreen extends javax.swing.JFrame {
         label.setForeground(Color.WHITE); 
         leftPanel.add(label);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 50))); // Add space
-    
-         JLabel word1Label; 
-         JLabel word2Label; 
-         JLabel word3Label;
-         JLabel word4Label; 
         
-         word1Label = new JLabel("1. "+word1);
-         word2Label = new JLabel("2. "+word2);
-         word3Label = new JLabel("3. "+word3);
-         word4Label = new JLabel("4. "+word4);
+         JLabel word1Label = new JLabel("1. "+word1);
+         JLabel word2Label = new JLabel("2. "+word2);
+         JLabel word3Label = new JLabel("3. "+word3);
+         JLabel word4Label = new JLabel("4. "+word4);
 
         
         word1Label.setForeground(Color.WHITE);
@@ -88,13 +83,12 @@ public class WordSearchScreen extends javax.swing.JFrame {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 150))); // Add space
 
         JButton checkWordButton = new JButton("Check Word");
-        //checkWordButton.addActionListener(this::checkWordAction); // Add action listener
         leftPanel.add(checkWordButton); 
         checkWordButton.addActionListener(evt -> checkWordAction()); // Add action listener
         leftPanel.add(Box.createRigidArea(new Dimension(0, 150))); // Add space
 
      
-        timerLabel = new JTextField("Time: " + timer + " mins");
+        timerLabel = new JTextField("Time: 2 mins");
         timerLabel.setEditable(false); 
         timerLabel.setForeground(Color.WHITE); 
         timerLabel.setBackground(new Color(128, 0, 0)); 
@@ -114,7 +108,7 @@ public class WordSearchScreen extends javax.swing.JFrame {
     }
 
     private void charButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        javax.swing.JButton sourceButton = (javax.swing.JButton) evt.getSource();
+        JButton sourceButton = (JButton) evt.getSource();
         sourceButton.setBackground(Color.GREEN);
         WordSearch.wordsChecker(sourceButton);
     }
@@ -157,17 +151,10 @@ public class WordSearchScreen extends javax.swing.JFrame {
         this.word4 = word4;
     }
 
-    public void setTimer(double timer) {
-        this.timer = timer;
-        timerLabel.setText(String.format("Time: %.2f mins", timer/60));
-    }
-
     public JTextField getTimerLabel() {
         return timerLabel;
     }
 
-    public double getTimer() {
-        return timer;
-    }
+
 
 }
