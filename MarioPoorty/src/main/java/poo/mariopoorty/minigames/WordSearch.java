@@ -25,7 +25,6 @@ public class WordSearch extends MiniGames{
     int boardDisplaySize;
     static int[] enableSizes={10,15,20};
     static Random randomNumber = new Random(); 
-    Player gamePlayer;
 
     public WordSearch( ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel, Board board) {
         super(players, type, description, currentPlayers, gamePanel, board);

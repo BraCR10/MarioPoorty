@@ -46,7 +46,7 @@ public class ThreadTimerWordSearch extends Thread{
                     isRunning = false;
                 }
 
-                if (wordSearch.getCounterCollectedWords() >= 4) {
+                if (WordSearch.getCounterCollectedWords() >= 4) {
                     screen.getTimerLabel().setText("You won!!!");
                     screen.getTimerLabel().setBackground(Color.GREEN);
                     sleep(2000);
