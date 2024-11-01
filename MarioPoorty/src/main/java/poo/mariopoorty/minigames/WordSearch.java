@@ -157,7 +157,6 @@ public class WordSearch extends MiniGames{
     
     private void startBoard(){
         try {
-            this.board.setVisible(false);
             WordSearchScreen screen = (WordSearchScreen) gamePanel;
             screen.setBoardSize(boardDisplaySize);
             screen.setBoardChars(matrizChars);
@@ -171,14 +170,12 @@ public class WordSearch extends MiniGames{
             
         } catch (Exception e) {
             throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-        
-        
-        
+        }  
     }
     
     @Override
     public void startGame() {
+        this.board.setVisible(false);
         this.gamePanel=new WordSearchScreen();
         generateBoard();
         startBoard();

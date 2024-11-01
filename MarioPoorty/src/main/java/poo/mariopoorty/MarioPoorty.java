@@ -4,6 +4,11 @@
 
 package poo.mariopoorty;
 
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import poo.mariopoorty.minigames.MemoryPath;
+import poo.mariopoorty.screens.MemoryPathScreen;
+
 
 /**
  *
@@ -13,8 +18,12 @@ public class MarioPoorty {
 
     public static void main(String[] args) {
         
-        new GameServer();
-        
+        //new GameServer();
+        ArrayList<Player> a = new ArrayList();
+        JFrame g =null;
+        Board b = null;
+        MemoryPath m = new MemoryPath(a, "", "", 0, g, b);
+        m.startGame();
         
     
         
