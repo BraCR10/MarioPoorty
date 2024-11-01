@@ -4,6 +4,7 @@
  */
 package poo.mariopoorty.threads;
 
+import java.awt.Color;
 import static java.lang.Thread.sleep;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -24,13 +25,15 @@ public class ThreadCellVerifierMemoryPath extends Thread{
     boolean cellState;
     JLabel cell;
     MemoryPathScreen screen;
+    MemoryPath memoryPathSettings;
 
-    public ThreadCellVerifierMemoryPath( boolean cellState,MemoryPathScreen screen, JLabel cell) {
+    public ThreadCellVerifierMemoryPath( boolean cellState,MemoryPathScreen screen, JLabel cell,MemoryPath memoryPathSettings) {
         this.screen=screen;
         this.cellState=cellState;
         this.isRunning=true;
         this.isPaused=false;
         this.cell=cell;
+        this.memoryPathSettings=memoryPathSettings;
 
     }
 
@@ -41,6 +44,11 @@ public class ThreadCellVerifierMemoryPath extends Thread{
             if (!isPaused) {
                 if(MemoryPath.isArrivedFlag()==true ){
                     if (!cellState) {
+                        
+                       int remainingAttempts = memoryPathSettings.getAttempts() - 1;
+                       memoryPathSettings.setAttempts(remainingAttempts);
+                       screen.getJtAttemps().setText("Attempts: "+ memoryPathSettings.getAttempts());
+                       
                         cell.setIcon(null);
                         sleep(500);
                         if (screen.getCharacter().getParent() == screen.getJpPlayGround()) 
@@ -48,25 +56,31 @@ public class ThreadCellVerifierMemoryPath extends Thread{
                         screen.getJpPlayGround().revalidate();
                         screen.getJpPlayGround().repaint();
                         screen.defaultSttings();
-                        int currentAttempts = Integer.parseInt(screen.getJtAttemps().getText());
-                       screen.getJtAttemps().setText(String.valueOf(currentAttempts - 1));
-                       
-                       
-                    } else if (screen.getCellsLabels()[5][0].equals(cell) || 
-                               screen.getCellsLabels()[5][1].equals(cell) || 
-                               screen.getCellsLabels()[5][2].equals(cell)) {
+                    } 
+                    else if (screen.getCellsLabels()[5][0].equals(cell) || //WIN CASE
+                            screen.getCellsLabels()[5][1].equals(cell) || 
+                            screen.getCellsLabels()[5][2].equals(cell)) {
                         
-                        if (screen.getCharacter().getParent() == screen.getJpPlayGround()) {
-                    screen.getJpPlayGround().remove(screen.getCharacter());
-                    }
-                    screen.getJpTarget().add(screen.getCharacter());
-                    screen.putCharacter(screen.getJpTarget(), 
-                                        (screen.getJpTarget().getWidth() - screen.getCharacter().getPreferredSize().width) / 2,
-                                        screen.getJpTarget().getHeight() / 3); // Ajustado a 0 para colocarlo en la parte superior
-                    screen.getJpTarget().setComponentZOrder(screen.getCharacter(), 0);
-                    screen.getJpPlayGround().revalidate();
-                    screen.getJpPlayGround().repaint();
+                        if (screen.getCharacter().getParent() == screen.getJpPlayGround()){
+                            screen.getJpPlayGround().remove(screen.getCharacter());}
+                            
+                        screen.getJpTarget().add(screen.getCharacter());
+                        screen.putCharacter(screen.getJpTarget(), (screen.getJpTarget().getWidth() - screen.getCharacter().getPreferredSize().width) / 2, screen.getJpTarget().getHeight() / 3); // Ajustado a 0 para colocarlo en la parte superior
+                        screen.getJpTarget().setComponentZOrder(screen.getCharacter(), 0);
+                        screen.getJpPlayGround().revalidate();
+                        screen.getJpPlayGround().repaint();
+                        
+                        screen.getJtAttemps().setText("You win!!!");
+                        screen.getJtAttemps().setBackground(Color.GREEN);
+                        sleep(1000);
+                        memoryPathSettings.endGame();
 
+                    }
+                    if(memoryPathSettings.getAttempts()<=0){
+                        screen.getJtAttemps().setText("You lost!!!");
+                        screen.getJtAttemps().setBackground(Color.red);
+                        sleep(1000);
+                        memoryPathSettings.endGame();
                     }
                     
                     isRunning=false;

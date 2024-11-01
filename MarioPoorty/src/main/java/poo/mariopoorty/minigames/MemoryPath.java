@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 import poo.mariopoorty.screens.MemoryPathScreen;
@@ -41,7 +40,6 @@ public class MemoryPath extends MiniGames{
         try {
             MemoryPathScreen screen = (MemoryPathScreen) gamePanel;
             screen.setCellsSeleted(matrizPathSeleted);
-            screen.setAttempts(attempts);
         } catch (Exception e) {
             throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
@@ -51,7 +49,7 @@ public class MemoryPath extends MiniGames{
     }
     @Override
     public void startGame() {
-        this.gamePanel=new MemoryPathScreen();
+        this.gamePanel=new MemoryPathScreen(this);
         generateBoard();
         startBoard();
         this.gamePanel.setVisible(true);
@@ -59,12 +57,20 @@ public class MemoryPath extends MiniGames{
 
     @Override
     public void endGame() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //Cleanning static vars
+        //this.board.setVisible(true);
+        //Deleting the screen
+        this.gamePanel.dispose();
     }
 
     @Override
     public void playTurn() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (Player player : players) {
+            if (player.isMyTurn) {
+                player.isMyTurn=false;
+                player.miniGame.startGame();
+            }
+        }
     }
     
     static boolean arrivedFlag=false;
@@ -80,7 +86,7 @@ public class MemoryPath extends MiniGames{
 
         Thread thread = new ThreadCharacterMemoryPathMovement(character, centerX,centerY);
         thread.start();
-        
+      
     }
     
 
@@ -90,6 +96,14 @@ public class MemoryPath extends MiniGames{
 
     public static void setArrivedFlag(boolean arrivedFlag) {
         MemoryPath.arrivedFlag = arrivedFlag;
+    }
+
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
     }
     
     
