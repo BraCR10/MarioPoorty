@@ -6,14 +6,14 @@ package poo.mariopoorty.minigames;
 
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 import poo.mariopoorty.screens.MemoryPathScreen;
-import poo.mariopoorty.screens.WordSearchScreen;
-import poo.mariopoorty.threads.ThreadTimerWordSearch;
+import poo.mariopoorty.threads.ThreadCellVerifierMemoryPath;
+import poo.mariopoorty.threads.ThreadCharacterMemoryPathMovement;
 
 /**
  *
@@ -37,10 +37,11 @@ public class MemoryPath extends MiniGames{
         }
     }
 
-        private void startBoard(){
+    private void startBoard(){
         try {
             MemoryPathScreen screen = (MemoryPathScreen) gamePanel;
-            screen.setSeletedCells(matrizPathSeleted);
+            screen.setCellsSeleted(matrizPathSeleted);
+            screen.setAttempts(attempts);
         } catch (Exception e) {
             throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
@@ -66,20 +67,30 @@ public class MemoryPath extends MiniGames{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    
-    public static void moveCharacter(JLabel cell, JLabel character){
-        
+    static boolean arrivedFlag=false;
+    public static void moveCharacter(JLabel cell, JLabel character) {
         int cellWidth = cell.getWidth();
         int cellHeight = cell.getHeight();
-        int iconWidth = cell.getWidth(); 
-        int iconHeight = cell.getHeight();
 
-        int centerX = cell.getX() + (cellWidth - iconWidth) / 4;
-        int centerY = cell.getY() + (cellHeight - iconHeight) / 4;
+        int iconWidth = character.getPreferredSize().width; 
+        int iconHeight = character.getPreferredSize().height;
 
-        character.setLocation(centerX, centerY);
+        int centerX = cell.getX() + (cellWidth - iconWidth) / 2;
+        int centerY = cell.getY() + (cellHeight - iconHeight) / 2;
 
-       
-       
+        Thread thread = new ThreadCharacterMemoryPathMovement(character, centerX,centerY);
+        thread.start();
+        
     }
+    
+
+    public static boolean isArrivedFlag() {
+        return arrivedFlag;
+    }
+
+    public static void setArrivedFlag(boolean arrivedFlag) {
+        MemoryPath.arrivedFlag = arrivedFlag;
+    }
+    
+    
 }

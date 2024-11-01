@@ -29,7 +29,7 @@ public class ThreadTimerWordSearch extends Thread{
         int totalSeconds = 120; 
         
 
-        while (isRunning) {
+        while (isRunning && screen!=null) {
             try {
                 sleep(1000);
                 totalSeconds--; 
