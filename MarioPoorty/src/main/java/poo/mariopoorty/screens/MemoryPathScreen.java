@@ -6,14 +6,12 @@ package poo.mariopoorty.screens;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.accessibility.AccessibleContext;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import poo.mariopoorty.minigames.MemoryPath;
 import poo.mariopoorty.threads.ThreadCellVerifierMemoryPath;
+import poo.mariopoorty.threads.ThreadCharacterMemoryPathMovement;
 
 
 
@@ -23,17 +21,16 @@ import poo.mariopoorty.threads.ThreadCellVerifierMemoryPath;
  */
 public class MemoryPathScreen extends javax.swing.JFrame {
 
-    JLabel[][] cellsLabels = new JLabel[6][3];
-    boolean[][] cellsSeleted = new boolean[6][3];
-    private final ImageIcon misteryBox;
-    private final ImageIcon misteryBoxDimmed;
-    private final ImageIcon misteryBoxNotAllowed;
-    private final ImageIcon misteryBoxIncorrect;
-    private final ImageIcon targetImage;
-    private final  ImageIcon characterImage;
-    JLabel character;
-    int currentRow;
-    MemoryPath memoryPathSettings;
+    private static final int ROWS = 3;
+    private static final int COLS = 6;
+
+
+    private JLabel[][] cellsLabels = new JLabel[COLS][ROWS];
+    private final ImageIcon misteryBox, misteryBoxDimmed, misteryBoxNotAllowed, misteryBoxIncorrect, targetImage, characterImage;
+    private JLabel character;
+    private int currentRow = -1;
+    private final MemoryPath memoryPathSettings;
+    private  boolean  isArrivedFlag;
     
     /**
      * Creates new form MemoryPathScreen
@@ -56,12 +53,12 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         targetImage = loadImage("/Spaces/target.jpg",jpTarget.getWidth(),jpTarget.getHeight());
         characterImage=loadImage("/Spaces/finish.png",60,60);
         character = new JLabel(characterImage);
-        
+        this.isArrivedFlag=false;
         this.memoryPathSettings=memoryPathSettings;
         
         putCells();
         putTarget();
-        defaultSttings();
+        defaultSettings();
         
         this.add(this.jpExit, BorderLayout.WEST); 
         this.add(this.jpPlayGround, BorderLayout.CENTER); 
@@ -101,7 +98,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
             .addGap(0, 1960, Short.MAX_VALUE)
         );
 
-        jpExit.setBackground(new java.awt.Color(51, 204, 0));
+        jpExit.setBackground(new java.awt.Color(204, 0, 102));
         jpExit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 0, 51)));
 
         jtAttemps.setBackground(new java.awt.Color(0, 0, 0));
@@ -205,7 +202,7 @@ private void putCells() {
                     cellMouseExited(evt);
                 }
             });
-            
+            this.currentRow=-1;
             this.jpPlayGround.add(cellsLabels[i][j]);
         }
     }
@@ -223,7 +220,7 @@ private void putTarget() {
     this.jpTarget.repaint(); 
 }
 
-public void defaultSttings(){
+public void defaultSettings(){
     putCharacter(jpExit, (this.jpExit.getWidth() - character.getPreferredSize().width) / 2,(this.jpExit.getHeight()) / 3);
 
     //To put images again
@@ -259,9 +256,7 @@ private void cellMouseClicked(MouseEvent evt) {
                if (character.getParent() == jpExit)jpExit.remove(character);
                jpPlayGround.add(character);
 
-               MemoryPath.moveCharacter(cellsLabels[i][j], character);
-               Thread thread = new ThreadCellVerifierMemoryPath(cellsSeleted[i][j],this,cellsLabels[i][j],memoryPathSettings);
-               thread.start();
+               moveCharacter(cellsLabels[i][j],memoryPathSettings.getMatrizPathSelected()[i][j]);
                jpPlayGround.revalidate();
                jpPlayGround.repaint();
                jpExit.revalidate();
@@ -276,8 +271,17 @@ private void cellMouseClicked(MouseEvent evt) {
 
 private void cellMouseEntered(java.awt.event.MouseEvent evt) { 
         if( ((JLabel) evt.getSource()).getIcon()!=null ){
-
-            ((JLabel) evt.getSource()).setIcon(this.misteryBoxDimmed);
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 3; j++){
+                    if(cellsLabels[i][j].equals(((JLabel) evt.getSource()))){
+                        if(i-1==currentRow)
+                            ((JLabel) evt.getSource()).setIcon(this.misteryBoxDimmed);
+                        else
+                            ((JLabel) evt.getSource()).setIcon(this.misteryBoxNotAllowed); 
+                    }
+                }
+            }
+            
         }
     } 
 
@@ -295,9 +299,7 @@ private  ImageIcon loadImage(String path, int width, int height ) {
     return new ImageIcon(resizedImage);
 }
 
-public void setCellsSeleted(boolean[][] cellsSeleted) {
-    this.cellsSeleted = cellsSeleted;
-}
+
 
 public JLabel[][] getCellsLabels() {
     return cellsLabels;
@@ -363,8 +365,25 @@ public ImageIcon getMisteryBox() {
         return misteryBoxIncorrect;
     }
 
+    public void setIsArrivedFlag(boolean isArrivedFlag) {
+        this.isArrivedFlag = isArrivedFlag;
+    }
+
+    public boolean isIsArrivedFlag() {
+        return isArrivedFlag;
+    }
 
 
+    public  void moveCharacter(JLabel cell, boolean cellSeletedState) {
+        int centerX = cell.getX() + (cell.getWidth() - character.getPreferredSize().width) / 2;
+        int centerY = cell.getY() + (cell.getHeight() - character.getPreferredSize().height) / 2;
+
+        Thread thread = new ThreadCharacterMemoryPathMovement(this, centerX, centerY);
+        thread.start();
+        thread = new ThreadCellVerifierMemoryPath(cellSeletedState,this,cell,memoryPathSettings);
+        thread.start();
+        
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

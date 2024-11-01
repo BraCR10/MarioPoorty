@@ -18,12 +18,9 @@ public class MarioPoorty {
 
     public static void main(String[] args) {
         
-        //new GameServer();
-        ArrayList<Player> a = new ArrayList();
-        JFrame g =null;
-        Board b = null;
-        MemoryPath m = new MemoryPath(a, "", "", 0, g, b);
-        m.startGame();
+        new GameServer();
+        
+       
         
     
         

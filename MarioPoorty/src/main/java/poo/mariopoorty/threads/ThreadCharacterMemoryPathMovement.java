@@ -6,6 +6,7 @@ package poo.mariopoorty.threads;
 
 import javax.swing.JLabel;
 import poo.mariopoorty.minigames.MemoryPath;
+import poo.mariopoorty.screens.MemoryPathScreen;
 
 
 /**
@@ -16,19 +17,19 @@ import poo.mariopoorty.minigames.MemoryPath;
 public class ThreadCharacterMemoryPathMovement extends Thread {
     private volatile boolean isRunning;
     private volatile boolean isPaused;
-    private final JLabel character;
+    private  MemoryPathScreen screen;
     private final int xLimit;
     private final int yLimit;
     private int x, y;;
 
-    public ThreadCharacterMemoryPathMovement(JLabel character, int xLimit, int yLimit) {
-        this.character = character;
+    public ThreadCharacterMemoryPathMovement(MemoryPathScreen screen, int xLimit, int yLimit ) {
         this.isRunning = true;
         this.isPaused = false;
         this.xLimit = xLimit;
         this.yLimit = yLimit;
-        this.x = character.getX();
-        this.y = character.getY();
+        this.x = screen.getCharacter().getX();
+        this.y = screen.getCharacter().getY();
+        this.screen=screen;
     }
 
     @Override
@@ -36,20 +37,20 @@ public class ThreadCharacterMemoryPathMovement extends Thread {
     while (isRunning) {
         try {
            if (!isPaused) {
-            character.setLocation(x, y);
+            screen.getCharacter().setLocation(x, y);
 
-            if (x < xLimit - 5) x += 10;
-            else if (x > xLimit + 5) x -= 10;
+            if (x < xLimit - 5) x += 6;
+            else if (x > xLimit + 5) x -= 6;
 
-            if (y < yLimit - 5) y += 10;
-            else if (y > yLimit + 5) y -= 10;
+            if (y < yLimit - 5) y += 6;
+            else if (y > yLimit + 5) y -= 6;
 
             if (Math.abs(x - xLimit) <= 5 && Math.abs(y - yLimit) <= 5) {
-                MemoryPath.setArrivedFlag(true);
+                screen.setIsArrivedFlag(true);
                 isRunning = false;
             }
 
-            character.repaint();
+            screen.getCharacter().repaint();
 }
             sleep(10);
         } catch (InterruptedException e) {

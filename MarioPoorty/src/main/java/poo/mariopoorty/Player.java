@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import poo.mariopoorty.minigames.MemoryPath;
 import poo.mariopoorty.minigames.MiniGames;
 import poo.mariopoorty.minigames.WordSearch;
 
@@ -88,7 +89,8 @@ public class Player implements Runnable{
                 if (serverMessage.equals("Your Turn")) {
                     isMyTurn=true;
                     initSearchWord();
-                    
+                    isMyTurn=true;
+                    initMemoryPath();
                     
                 }
 
@@ -102,6 +104,13 @@ public class Player implements Runnable{
     void initSearchWord(){
         //Test
         miniGame = new WordSearch(players,"Search Word","Play alone",1,miniGameScreen,board);
+        miniGame.playTurn();
+    }
+    
+        
+    void initMemoryPath(){
+        //Test
+        miniGame = new MemoryPath(players, "Search Word","Play alone",1, miniGameScreen, board);
         miniGame.playTurn();
     }
 
