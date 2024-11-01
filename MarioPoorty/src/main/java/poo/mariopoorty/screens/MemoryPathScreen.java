@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
+import poo.mariopoorty.minigames.MemoryPath;
 
 
 
@@ -21,8 +22,11 @@ public class MemoryPathScreen extends javax.swing.JFrame {
 
     JLabel[][] cellsLabels = new JLabel[6][3];
     boolean[][] seletedCells;
-    private ImageIcon misteryBox;
-    private ImageIcon misteryBoxDimmed;
+    private final ImageIcon misteryBox;
+    private final ImageIcon misteryBoxDimmed;
+    private final ImageIcon targetImage;
+    private  ImageIcon characterImage;
+    JLabel character;
     
     /**
      * Creates new form MemoryPathScreen
@@ -33,12 +37,19 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLayout(new BorderLayout());
 
-        this.jpExit.setPreferredSize(new Dimension(50, this.getHeight())); 
-        this.jpTarget.setPreferredSize(new Dimension(100, this.getHeight())); 
-
+        this.jpExit.setPreferredSize(new Dimension(100, this.getHeight())); 
+        this.jpTarget.setPreferredSize(new Dimension(50, this.getHeight())); 
+        
+        misteryBox = loadImage("/Spaces/misteryBox.jpg",150,150);
+        misteryBoxDimmed = loadImage("/Spaces/misteryBoxDimmed.jpg",150,150);
+        targetImage = loadImage("/Spaces/target.jpg",jpTarget.getWidth(),jpTarget.getHeight());
+        characterImage=loadImage("/Spaces/finish.png",60,60);
+        
+       
         putCells();
         putTarget();
         putExit();
+        
         
         this.add(this.jpExit, BorderLayout.WEST); // Add jpExit to the west
         this.add(this.jpPlayGround, BorderLayout.CENTER); // Add jpPlayGround to the center
@@ -47,8 +58,6 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         this.setLocationRelativeTo(null); 
         this.setResizable(false);
         
-        misteryBox = loadImage("/Spaces/misteryBox.jpg");
-        misteryBoxDimmed = loadImage("/Spaces/misteryBoxDimmed.jpg");
 
     }
 
@@ -87,11 +96,11 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         jpExit.setLayout(jpExitLayout);
         jpExitLayout.setHorizontalGroup(
             jpExitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 74, Short.MAX_VALUE)
+            .addGap(0, 96, Short.MAX_VALUE)
         );
         jpExitLayout.setVerticalGroup(
             jpExitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 1954, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jpTargetLayout = new javax.swing.GroupLayout(jpTarget);
@@ -111,7 +120,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jpExit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(65, 65, 65)
                 .addComponent(jpPlayGround, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -148,8 +157,15 @@ private void putCells() {
                 cellMouseClicked(evt);}}
             );
             this.cellsLabels[i][j].addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 cellMouseEntered(evt);
+            } }
+            );
+            this.cellsLabels[i][j].addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent evt) {
+                cellMouseExited(evt);
             } }
             );
             this.jpPlayGround.add(cellsLabels[i][j]);
@@ -162,7 +178,7 @@ private void putCells() {
 
 private void putTarget() {
     this.jpTarget.setLayout(null); 
-    JLabel targetLabel = new JLabel(this.misteryBox);
+    JLabel targetLabel = new JLabel(this.targetImage);
     targetLabel.setBounds(0, 0, jpTarget.getWidth(), jpTarget.getHeight()); 
     jpTarget.add(targetLabel); 
     this.jpTarget.revalidate(); 
@@ -170,48 +186,68 @@ private void putTarget() {
 }
 
 private void putExit() {
-    this.jpExit.setLayout(null); 
+    // Set null layout to allow manual positioning
+    this.jpExit.setLayout(null);
 
-   
-    this.jpExit.revalidate(); 
-    this.jpExit.repaint(); 
+    // Create and add character JLabel
+    character = new JLabel(characterImage);
+    jpExit.add(character);
+
+    // Calculate center position
+    int x = (this.jpExit.getWidth() - character.getPreferredSize().width) / 2;
+    int y = (this.jpExit.getHeight()) / 3;
+
+    // Set JLabel position and size
+    character.setBounds(x, y, character.getPreferredSize().width, character.getPreferredSize().height);
+
+    // Refresh panel display
+    this.jpExit.revalidate();
+    this.jpExit.repaint();
 }
 
-private void cellMouseClicked(MouseEvent evt) {                                     
+private void cellMouseClicked(MouseEvent evt) { 
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 3; j++) {
             if (evt.getSource().equals(cellsLabels[i][j])) {
-                if (seletedCells[i][j]) {
-                    System.out.println("toched");
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MemoryPathScreen.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    ((JLabel) evt.getSource()).setIcon(null);
-                }
+                jpPlayGround.setLayout(null);
+                jpExit.setLayout(null);
+                
+               if (character.getParent() == jpExit)jpExit.remove(character);
+
+               jpPlayGround.add(character);
+               MemoryPath.moveCharacter(cellsLabels[i][j], character);
+               jpPlayGround.revalidate();
+               jpPlayGround.repaint();
+               jpExit.revalidate();
+               jpExit.repaint();
+               jpPlayGround.setComponentZOrder(character, 0);
             }
         }
     }
-} 
+}
 
-    public void setSeletedCells(boolean[][] seletedCells) {
+public void setSeletedCells(boolean[][] seletedCells) {
         this.seletedCells = seletedCells;
     }
 
-  
-    private void cellMouseEntered(java.awt.event.MouseEvent evt) { 
+private void cellMouseEntered(java.awt.event.MouseEvent evt) { 
         if( ((JLabel) evt.getSource()).getIcon()!=null){
 
             ((JLabel) evt.getSource()).setIcon(this.misteryBoxDimmed);
         }
     } 
-    
-    
-   private  ImageIcon loadImage(String path) {
+
+private void cellMouseExited(java.awt.event.MouseEvent evt) { 
+        if( ((JLabel) evt.getSource()).getIcon()!=null){
+
+            ((JLabel) evt.getSource()).setIcon(this.misteryBox);
+        }
+    } 
+      
+private  ImageIcon loadImage(String path, int width, int height ) {
     ImageIcon originalIcon = new ImageIcon(getClass().getResource(path));
     Image originalImage = originalIcon.getImage();
-    Image resizedImage = originalImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     return new ImageIcon(resizedImage);
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables

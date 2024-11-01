@@ -6,7 +6,9 @@ package poo.mariopoorty.minigames;
 
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 import poo.mariopoorty.screens.MemoryPathScreen;
@@ -64,4 +66,20 @@ public class MemoryPath extends MiniGames{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    
+    public static void moveCharacter(JLabel cell, JLabel character){
+        
+        int cellWidth = cell.getWidth();
+        int cellHeight = cell.getHeight();
+        int iconWidth = cell.getWidth(); 
+        int iconHeight = cell.getHeight();
+
+        int centerX = cell.getX() + (cellWidth - iconWidth) / 4;
+        int centerY = cell.getY() + (cellHeight - iconHeight) / 4;
+
+        character.setLocation(centerX, centerY);
+
+       
+       
+    }
 }
