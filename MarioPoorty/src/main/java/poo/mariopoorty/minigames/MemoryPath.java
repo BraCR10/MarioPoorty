@@ -38,11 +38,6 @@ public class MemoryPath extends MiniGames {
     public void startGame() {
         this.gamePanel = new MemoryPathScreen(this);
         configurePathMatrix();
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                System.out.println(matrizPathSelected[i][j]);
-            }
-        }
         this.gamePanel.setVisible(true);
     }
 
