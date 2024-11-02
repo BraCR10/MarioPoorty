@@ -28,7 +28,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
 
     private JLabel[][] cellsLabels = new JLabel[ROWS][COLS];
     private final ImageIcon misteryBox, misteryBoxDimmed, misteryBoxNotAllowed, misteryBoxIncorrect, targetImage, characterImage;
-    private final String RESOURCEPATH = "/MemoryPathGame/";
+    private static final String RESOURCEPATH = "/MemoryPathGame/";
 
     private JLabel character;
     private int currentRow = -1;
