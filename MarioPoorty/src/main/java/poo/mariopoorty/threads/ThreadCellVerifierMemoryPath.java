@@ -93,7 +93,7 @@ public class ThreadCellVerifierMemoryPath extends Thread {
     private void displayLoss() throws InterruptedException {
         screen.getJtAttemps().setText("You lost!!!");
         screen.getJtAttemps().setBackground(Color.RED);
-        sleep(1000);
+        sleep(1500);
     }
 
     private boolean isWinningCell() {

@@ -35,7 +35,7 @@ public class WordSearch extends MiniGames{
         this.selectedWordsList = new ArrayList<>();
         chooseRandomWordsPosition();
         
-        this.boardDisplaySize=randomNumber.nextInt(0,2);
+        this.boardDisplaySize=randomNumber.nextInt(enableSizes.length);
         this.boardDisplaySize=enableSizes[boardDisplaySize];
    
         this.matrizChars = new char[boardDisplaySize][boardDisplaySize];

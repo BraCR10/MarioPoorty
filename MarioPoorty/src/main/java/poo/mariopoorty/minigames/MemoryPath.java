@@ -16,8 +16,10 @@ import poo.mariopoorty.screens.MemoryPathScreen;
  * @author Brian
  */
 public class MemoryPath extends MiniGames {
+    private static final int ROWS = 6;
+    private static final int COLS = 3;
     private static final Random randomNumber = new Random();
-    private final boolean[][] matrizPathSelected = new boolean[6][3];
+    private final boolean[][] matrizPathSelected = new boolean[ROWS][COLS];
     private int attempts;
 
     public MemoryPath(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel, Board board) {
@@ -26,7 +28,7 @@ public class MemoryPath extends MiniGames {
     }
 
     private void configurePathMatrix() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < ROWS; i++) {
             matrizPathSelected[i][randomNumber.nextInt(3)] = true;
         }
     }
@@ -36,12 +38,17 @@ public class MemoryPath extends MiniGames {
     public void startGame() {
         this.gamePanel = new MemoryPathScreen(this);
         configurePathMatrix();
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                System.out.println(matrizPathSelected[i][j]);
+            }
+        }
         this.gamePanel.setVisible(true);
     }
 
     @Override
     public void endGame() {
-        this.board.setVisible(true);
+        //this.board.setVisible(true);
         this.gamePanel.dispose();
     }
 

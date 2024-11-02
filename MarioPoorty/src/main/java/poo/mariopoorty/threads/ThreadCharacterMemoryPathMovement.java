@@ -4,8 +4,7 @@
  */
 package poo.mariopoorty.threads;
 
-import javax.swing.JLabel;
-import poo.mariopoorty.minigames.MemoryPath;
+
 import poo.mariopoorty.screens.MemoryPathScreen;
 
 

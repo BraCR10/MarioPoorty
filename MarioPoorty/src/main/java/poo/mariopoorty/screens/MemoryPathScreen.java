@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import poo.mariopoorty.minigames.LoadImage;
 import poo.mariopoorty.minigames.MemoryPath;
 import poo.mariopoorty.threads.ThreadCellVerifierMemoryPath;
 import poo.mariopoorty.threads.ThreadCharacterMemoryPathMovement;
@@ -21,12 +22,14 @@ import poo.mariopoorty.threads.ThreadCharacterMemoryPathMovement;
  */
 public class MemoryPathScreen extends javax.swing.JFrame {
 
-    private static final int ROWS = 3;
-    private static final int COLS = 6;
+    private static final int ROWS = 6;
+    private static final int COLS = 3;
 
 
-    private JLabel[][] cellsLabels = new JLabel[COLS][ROWS];
+    private JLabel[][] cellsLabels = new JLabel[ROWS][COLS];
     private final ImageIcon misteryBox, misteryBoxDimmed, misteryBoxNotAllowed, misteryBoxIncorrect, targetImage, characterImage;
+    private final String RESOURCEPATH = "/MemoryPathGame/";
+
     private JLabel character;
     private int currentRow = -1;
     private final MemoryPath memoryPathSettings;
@@ -46,12 +49,12 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         this.jpExit.setPreferredSize(new Dimension(100, this.getHeight())); 
         this.jpTarget.setPreferredSize(new Dimension(100, this.getHeight())); 
         
-        misteryBox = loadImage("/Spaces/misteryBox.jpg",150,150);
-        misteryBoxDimmed = loadImage("/Spaces/misteryBoxDimmed.jpg",150,150);
-        misteryBoxIncorrect = loadImage("/Spaces/misteryBoxNotAllowed.jpg",150,150);
-        misteryBoxNotAllowed = loadImage("/Spaces/misteryBoxIncorrect.jpg",150,150);
-        targetImage = loadImage("/Spaces/target.jpg",jpTarget.getWidth(),jpTarget.getHeight());
-        characterImage=loadImage("/Spaces/finish.png",60,60);
+        misteryBox = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBox.jpg",150,150);
+        misteryBoxDimmed = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxDimmed.jpg",150,150);
+        misteryBoxIncorrect = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxNotAllowed.jpg",150,150);
+        misteryBoxNotAllowed = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxIncorrect.jpg",150,150);
+        targetImage = LoadImage.loadImageAdjusted(RESOURCEPATH+"target.jpg",jpTarget.getWidth(),jpTarget.getHeight());
+        characterImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"character.png",60,60);
         character = new JLabel(characterImage);
         this.isArrivedFlag=false;
         this.memoryPathSettings=memoryPathSettings;
@@ -176,12 +179,12 @@ public class MemoryPathScreen extends javax.swing.JFrame {
 
 
 private void putCells() {
-    this.jpPlayGround.setLayout(new GridLayout(3, 6)); 
+    this.jpPlayGround.setLayout(new GridLayout(COLS, ROWS)); 
 
     Border leftRightBorder = BorderFactory.createMatteBorder(0, 5, 0, 1, Color.red);
     
-    for (int j = 0; j < 3; j++) { 
-        for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < COLS; j++) { 
+        for (int i = 0; i < ROWS; i++) {
             this.cellsLabels[i][j] = new JLabel(misteryBox);
             this.cellsLabels[i][j].setVisible(true);
             this.cellsLabels[i][j].setBorder(leftRightBorder);
@@ -224,8 +227,8 @@ public void defaultSettings(){
     putCharacter(jpExit, (this.jpExit.getWidth() - character.getPreferredSize().width) / 2,(this.jpExit.getHeight()) / 3);
 
     //To put images again
-    for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
             this.getCellsLabels()[i][j].setIcon(this.getMisteryBox());
         }
     }
@@ -245,8 +248,8 @@ public void putCharacter(JPanel jp, int x, int y){
 }
 
 private void cellMouseClicked(MouseEvent evt) { 
-    for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
             if (evt.getSource().equals(cellsLabels[i][j])
                 && currentRow+1==i) {
                     
@@ -271,8 +274,8 @@ private void cellMouseClicked(MouseEvent evt) {
 
 private void cellMouseEntered(java.awt.event.MouseEvent evt) { 
         if( ((JLabel) evt.getSource()).getIcon()!=null ){
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 3; j++){
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++){
                     if(cellsLabels[i][j].equals(((JLabel) evt.getSource()))){
                         if(i-1==currentRow)
                             ((JLabel) evt.getSource()).setIcon(this.misteryBoxDimmed);
@@ -291,13 +294,9 @@ private void cellMouseExited(java.awt.event.MouseEvent evt) {
             ((JLabel) evt.getSource()).setIcon(this.misteryBox);
         }
     } 
+     
       
-private  ImageIcon loadImage(String path, int width, int height ) {
-    ImageIcon originalIcon = new ImageIcon(getClass().getResource(path));
-    Image originalImage = originalIcon.getImage();
-    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-    return new ImageIcon(resizedImage);
-}
+
 
 
 
