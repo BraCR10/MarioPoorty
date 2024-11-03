@@ -33,7 +33,7 @@ public class CatchTheCatScreen extends javax.swing.JFrame {
         this.setResizable(false);
         
         //spaceImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"block.png",ROWS*7,COLS*5);
-        spaceImage=new SpriteSelector(RESOURCEPATH+"cat.png",400,300,70,80);
+        spaceImage=new SpriteSelector(RESOURCEPATH+"cat.png",SpriteCatPositionsEnum.LEFT);
         matrizSpacesLabels=new JLabel[ROWS][COLS];
         putSpaces();
     }
