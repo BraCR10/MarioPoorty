@@ -32,7 +32,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
 
     private JLabel character;
     private int currentRow = -1;
-    private final MemoryPath memoryPathSettings;
+    private final MemoryPath settings;
     private  boolean  isArrivedFlag;
     
     /**
@@ -57,7 +57,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         characterImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"character.png",60,60);
         character = new JLabel(characterImage);
         this.isArrivedFlag=false;
-        this.memoryPathSettings=memoryPathSettings;
+        this.settings=memoryPathSettings;
         
         putCells();
         putTarget();
@@ -259,7 +259,7 @@ private void cellMouseClicked(MouseEvent evt) {
                if (character.getParent() == jpExit)jpExit.remove(character);
                jpPlayGround.add(character);
 
-               moveCharacter(cellsLabels[i][j],memoryPathSettings.getMatrizPathSelected()[i][j]);
+               moveCharacter(cellsLabels[i][j],settings.getMatrizPathSelected()[i][j]);
                jpPlayGround.revalidate();
                jpPlayGround.repaint();
                jpExit.revalidate();
@@ -379,7 +379,7 @@ public ImageIcon getMisteryBox() {
 
         Thread thread = new ThreadCharacterMemoryPathMovement(this, centerX, centerY);
         thread.start();
-        thread = new ThreadCellVerifierMemoryPath(cellSeletedState,this,cell,memoryPathSettings);
+        thread = new ThreadCellVerifierMemoryPath(cellSeletedState,this,cell,settings);
         thread.start();
         
     }

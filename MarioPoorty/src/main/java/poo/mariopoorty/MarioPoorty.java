@@ -4,12 +4,7 @@
 
 package poo.mariopoorty;
 
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import poo.mariopoorty.minigames.CatchTheCat;
-import poo.mariopoorty.minigames.MemoryPath;
-import poo.mariopoorty.minigames.MiniGames;
-import poo.mariopoorty.minigames.WordSearch;
+
 
 
 /**
@@ -19,14 +14,9 @@ import poo.mariopoorty.minigames.WordSearch;
 public class MarioPoorty {
 
     public static void main(String[] args) {
-        /*
+
         new GameServer();
-        */
-        ArrayList<Player> p = new ArrayList<>();
-        Board b=null;
-        JFrame g=null;
-        MiniGames c = new CatchTheCat(p,"", "", 0, g, b);
-       c.startGame();
+       
         
     
         

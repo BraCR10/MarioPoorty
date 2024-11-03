@@ -14,15 +14,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import static javax.swing.BorderFactory.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import poo.mariopoorty.minigames.CatchTheCat;
 import poo.mariopoorty.minigames.LoadImage;
@@ -36,15 +33,15 @@ public class CatchTheCatScreen extends JFrame {
     private static  int COLS ;
     private static final String RESOURCEPATH = "/CatchTheCatGame/";
     private final JLabel[][] matrizSpacesLabels;
-    private   ImageIcon spaceImage;
-    private   ImageIcon spaceImageDimmed;
+    private ImageIcon spaceImage;
+    private ImageIcon spaceImageDimmed;
     private JLabel characterLabel;
     private JLabel gameStateLabel;
     private JLayeredPane jpPlayGround;
     private JPanel jpBorders;
     private final int yOFFSET = 55;
     private final int xOFFSET = 60;
-    private final int characterCentre = 15;
+    private final int characterCentreAjust = 15;
     private CatchTheCat settings;
     private SpriteAreaSelector characterImage;
     
@@ -111,7 +108,6 @@ public class CatchTheCatScreen extends JFrame {
 
        
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private void putSpaces() {
@@ -152,7 +148,7 @@ public class CatchTheCatScreen extends JFrame {
     public void putCharacter(int x, int y) {
         jpPlayGround.setLayout(null);
         jpPlayGround.add(characterLabel, JLayeredPane.PALETTE_LAYER);
-        characterLabel.setBounds(x*xOFFSET+characterCentre, (y*yOFFSET-characterCentre), characterLabel.getPreferredSize().width, characterLabel.getPreferredSize().height);
+        characterLabel.setBounds(x*xOFFSET+characterCentreAjust, (y*yOFFSET-characterCentreAjust), characterLabel.getPreferredSize().width, characterLabel.getPreferredSize().height);
         jpPlayGround.revalidate();
         jpPlayGround.repaint();
     }
@@ -228,11 +224,11 @@ public class CatchTheCatScreen extends JFrame {
     }
 
     public int getCharacterCentreX() {
-        return characterCentre;
+        return characterCentreAjust;
     }
 
     public int getCharacterCentreY() {
-        return characterCentre;
+        return characterCentreAjust;
     }
 
     public static int getROWS() {

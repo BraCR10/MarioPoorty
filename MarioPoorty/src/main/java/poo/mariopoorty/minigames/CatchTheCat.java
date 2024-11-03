@@ -7,14 +7,11 @@ package poo.mariopoorty.minigames;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 import poo.mariopoorty.screens.CatchTheCatScreen;
-import poo.mariopoorty.screens.SpriteCatPositionsEnum;
 import poo.mariopoorty.threads.ThreadCatJumpAnimation;
 
 /**
@@ -32,14 +29,14 @@ public class CatchTheCat extends MiniGames{
 
     @Override
     public void startGame() {
-        //this.board.setVisible(false);
+        this.board.setVisible(false);
         this.gamePanel=new CatchTheCatScreen(this);
         this.gamePanel.setVisible(true);
     }
 
     @Override
     public void endGame() {
-        //this.board.setVisible(false);
+        this.board.setVisible(false);
         this.gamePanel.dispose();
     }
     
@@ -79,7 +76,6 @@ public class CatchTheCat extends MiniGames{
             screen.getMatrizSpacesLabels()[row][col].setIcon(screen.getSpaceImageDimmed() );
 
             ArrayList<Point> path=searchExit();
-            System.out.println(path);
             if(path!=null){
                 Thread t = new ThreadCatJumpAnimation( (int)path.get(0).getX(), (int)path.get(0).getY(), screen,characterX(),characterY());
                 t.start();
@@ -89,7 +85,7 @@ public class CatchTheCat extends MiniGames{
                 screen.getGameSatate().setBackground(Color.GREEN);
                 Thread t = new Thread(() -> {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

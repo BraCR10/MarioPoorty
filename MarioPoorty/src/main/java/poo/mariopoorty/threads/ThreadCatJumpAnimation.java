@@ -7,10 +7,8 @@ package poo.mariopoorty.threads;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import poo.mariopoorty.screens.CatchTheCatScreen;
 import poo.mariopoorty.screens.SpriteCatPositionsEnum;
-import poo.mariopoorty.screens.SpriteAreaSelector;
 
 /**
  *
@@ -61,7 +59,7 @@ public class ThreadCatJumpAnimation extends Thread {
                  if(targetX==0 || targetX==screen.getROWS()-1 || targetY==0 ||targetY==screen.getCOLS()-1 ){
                      screen.getGameSatate().setText("You lost!");
                      screen.getGameSatate().setBackground(Color.red);
-                     sleep(500);
+                     sleep(800);
                      screen.getSettings().endGame();
                  
                  }
