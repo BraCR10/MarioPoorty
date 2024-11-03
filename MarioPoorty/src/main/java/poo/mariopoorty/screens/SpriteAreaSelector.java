@@ -15,14 +15,13 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public final class SpriteSelector extends ImageIcon {
+public final class SpriteAreaSelector extends ImageIcon {
     private BufferedImage spriteSheet;
     private BufferedImage sprite;
 
-    public SpriteSelector(String spritePath) {
+    public SpriteAreaSelector(String spritePath) {
         try {
             spriteSheet = ImageIO.read(new File("src/main/resources/" + spritePath));
-            // Initialize with FRONT position
             changeSprite(SpriteCatPositionsEnum.FRONT);
         } catch (IOException e) {
             e.printStackTrace();

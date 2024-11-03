@@ -45,7 +45,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         this.setSize(1250, 650);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLayout(new BorderLayout());
-
+        
         this.jpExit.setPreferredSize(new Dimension(100, this.getHeight())); 
         this.jpTarget.setPreferredSize(new Dimension(100, this.getHeight())); 
         

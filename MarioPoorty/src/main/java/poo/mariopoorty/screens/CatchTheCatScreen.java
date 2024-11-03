@@ -5,44 +5,174 @@
 package poo.mariopoorty.screens;
 
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import static javax.swing.BorderFactory.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import poo.mariopoorty.minigames.CatchTheCat;
 import poo.mariopoorty.minigames.LoadImage;
 
 /**
  *
  * @author Brian Ramirez
  */
-public class CatchTheCatScreen extends javax.swing.JFrame {
-     private static final int ROWS=11;
-     private static final int COLS=11;
-     private static final String RESOURCEPATH = "/CatchTheCatGame/";
-     private final JLabel[][] matrizSpacesLabels;
-     private final ImageIcon spaceImage;
-     private JLabel characterLabel;
-    /**
-     * Creates new form CatchTheCatScreen
-     */
-    public CatchTheCatScreen() {
+public class CatchTheCatScreen extends JFrame {
+    private static  int ROWS ;
+    private static  int COLS ;
+    private static final String RESOURCEPATH = "/CatchTheCatGame/";
+    private final JLabel[][] matrizSpacesLabels;
+    private   ImageIcon spaceImage;
+    private   ImageIcon spaceImageDimmed;
+    private JLabel characterLabel;
+    private JLabel gameStateLabel;
+    private JLayeredPane jpPlayGround;
+    private JPanel jpBorders;
+    private final int yOFFSET = 55;
+    private final int xOFFSET = 60;
+    private final int characterCentre = 15;
+    private CatchTheCat settings;
+    private SpriteAreaSelector characterImage;
+    
+
+    public CatchTheCatScreen(CatchTheCat settings) {
+        ROWS=settings.getROWS();
+        COLS=settings.getCOLS();
+        
         initComponents();
-        setTitle("Catch the cat");
-        this.setSize(1250, 650);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        this.setResizable(false);
+        setTitle("Catch the Cat");
+        setSize(1250, 650);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLayout(new BorderLayout());
+
+
+        jpPlayGround = new JLayeredPane();
+
+
+        jpBorders=new  JPanel();
+        jpBorders.setLayout(new BorderLayout());
+
+
+        JPanel labelPanelLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        labelPanelLeft.setBackground(Color.WHITE);
+        JPanel labelPanelRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        labelPanelRight.setBackground(Color.WHITE);
+
+
         
-        spaceImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"base.png",ROWS*8,COLS*5);
-        //spaceImage=new SpriteSelector(RESOURCEPATH+"cat.png",SpriteCatPositionsEnum.LEFT);
-        matrizSpacesLabels=new JLabel[ROWS][COLS];
-         //initCharacter();
+    
+        gameStateLabel = new JLabel("Catch the cat!", SwingConstants.CENTER);
+        gameStateLabel.setForeground(Color.BLACK);
+        gameStateLabel.setOpaque(true); 
+        gameStateLabel.setBackground(Color.WHITE); 
+        gameStateLabel.setFont(new Font("SansSerif", Font.BOLD, 16)); 
+        
+        labelPanelRight.setPreferredSize(new  Dimension(280,0));
+        labelPanelRight.add(gameStateLabel);
+        
+        labelPanelRight.setPreferredSize(new Dimension(280, 0));
+        labelPanelRight.setLayout(new BorderLayout()); 
+        labelPanelRight.add(gameStateLabel, BorderLayout.CENTER);
+        
+        labelPanelLeft.setPreferredSize(new Dimension(280,0));
+
+        jpBorders.add(labelPanelLeft, BorderLayout.EAST);
+        jpBorders.add(labelPanelRight, BorderLayout.WEST);
+        jpBorders.add(jpPlayGround, BorderLayout.CENTER);
+
+        
+        this.settings = settings;
+        spaceImage = LoadImage.loadImageAdjusted(RESOURCEPATH + "base.png", xOFFSET, yOFFSET);
+        spaceImageDimmed = LoadImage.loadImageAdjusted(RESOURCEPATH + "baseDimmed.png", xOFFSET, yOFFSET);
+        characterImage = new SpriteAreaSelector(RESOURCEPATH + "cat.png");
+        matrizSpacesLabels = new JLabel[ROWS][COLS];
+
+        
         putSpaces();
+        initCharacter();
+
         
+        add(jpBorders, BorderLayout.CENTER);
+
        
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void putSpaces() {
+        jpPlayGround.setLayout(null);
+        jpPlayGround.setPreferredSize(new Dimension(COLS * xOFFSET, ROWS * yOFFSET));
+
+        int margin = 1;
+
+        for (int j = 0; j < ROWS; j++) {
+            for (int i = 0; i < COLS; i++) {
+                matrizSpacesLabels[i][j] = new JLabel(spaceImage);
+                matrizSpacesLabels[i][j].setBounds(i * xOFFSET + margin, j * yOFFSET + margin, xOFFSET - 2 * margin, yOFFSET - 2 * margin);
+                matrizSpacesLabels[i][j].setBorder(new EmptyBorder(margin, margin, margin, margin));
+                matrizSpacesLabels[i][j].setVisible(true);
+                jpPlayGround.add(matrizSpacesLabels[i][j], JLayeredPane.DEFAULT_LAYER);
+
+                matrizSpacesLabels[i][j].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent evt) {
+                        spaceMouseClicked(evt);
+                    }
+                });
+            }
+        }
+
+        jpPlayGround.revalidate();
+        jpPlayGround.repaint();
+    }
+
+    private void initCharacter() {
+        characterLabel = new JLabel(characterImage.getSpriteLabel());
+        characterLabel.setSize(xOFFSET, yOFFSET);
+        int centerX = 5 ;
+        int centerY = 5 ;
+        putCharacter(centerX, centerY);
+    }
+
+    public void putCharacter(int x, int y) {
+        jpPlayGround.setLayout(null);
+        jpPlayGround.add(characterLabel, JLayeredPane.PALETTE_LAYER);
+        characterLabel.setBounds(x*xOFFSET+characterCentre, (y*yOFFSET-characterCentre), characterLabel.getPreferredSize().width, characterLabel.getPreferredSize().height);
+        jpPlayGround.revalidate();
+        jpPlayGround.repaint();
+    }
+
+    private void spaceMouseClicked(MouseEvent evt) {
+        if(settings.isEnableCatMovement()){
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                    if (evt.getSource().equals(matrizSpacesLabels[i][j])  &&
+                       !matrizSpacesLabels[i][j].getIcon().equals(spaceImageDimmed)) {
+                        try {
+                            settings.moveCharacter(i, j);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(CatchTheCatScreen.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -54,128 +184,84 @@ public class CatchTheCatScreen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jpPlayGround = new javax.swing.JPanel();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(51, 51, 255));
-
-        jpPlayGround.setBackground(new java.awt.Color(255, 102, 102));
-
-        javax.swing.GroupLayout jpPlayGroundLayout = new javax.swing.GroupLayout(jpPlayGround);
-        jpPlayGround.setLayout(jpPlayGroundLayout);
-        jpPlayGroundLayout.setHorizontalGroup(
-            jpPlayGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 362, Short.MAX_VALUE)
-        );
-        jpPlayGroundLayout.setVerticalGroup(
-            jpPlayGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 295, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jpPlayGround, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(26, 26, 26))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jpPlayGround, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 55, Short.MAX_VALUE))
+            .addGap(0, 410, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
+
+
+    public JLabel getCharacterLabel() {
+        return characterLabel;
+    }
+
+    public void setCharacterLabel(JLabel characterLabel) {
+        this.characterLabel = characterLabel;
+    }
+
+    public JLabel[][] getMatrizSpacesLabels() {
+        return matrizSpacesLabels;
+    }
+
+    public static String getRESOURCEPATH() {
+        return RESOURCEPATH;
+    }
+
+    public int getyOFFSET() {
+        return yOFFSET;
+    }
+
+    public int getxOFFSET() {
+        return xOFFSET;
+    }
+
+    public int getCharacterCentreX() {
+        return characterCentre;
+    }
+
+    public int getCharacterCentreY() {
+        return characterCentre;
+    }
+
+    public static int getROWS() {
+        return ROWS;
+    }
+
+    public static int getCOLS() {
+        return COLS;
+    }
+
+    public  ImageIcon getSpaceImageDimmed() {
+        return spaceImageDimmed;
+    }
+
+    public SpriteAreaSelector getCharacterImage() {
+        return characterImage;
+    }
+
+    public CatchTheCat getSettings() {
+        return settings;
+    }
+
+    public JLabel getGameSatate() {
+        return gameStateLabel;
+    }
+
  
-
-
-    private void putSpaces() {
-        jpPlayGround.setLayout(new GridLayout(ROWS, COLS));
-        jpPlayGround.setPreferredSize(new Dimension(COLS * 53, ROWS * 50)); // Adjusted for better sizing
-
-        for (int j = 0; j < ROWS; j++) {
-            for (int i = 0; i < COLS; i++) {
-                matrizSpacesLabels[i][j] = new JLabel(spaceImage);
-                matrizSpacesLabels[i][j].setVisible(true);
-                jpPlayGround.add(matrizSpacesLabels[i][j]);
-
-                matrizSpacesLabels[i][j].addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent evt) {
-                        spaceMouseClicked(evt);
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent evt) {
-                        spaceMouseEntered(evt);
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent evt) {
-                        spaceMouseExited(evt);
-                    }
-                });
-            }
-        }
-
-        jpPlayGround.revalidate();
-        jpPlayGround.repaint();
-    }
-
-    private void initCharacter() {
-        characterLabel = new JLabel(new SpriteSelector(RESOURCEPATH + "cat.png").getSpriteLabel());
-        characterLabel.setSize(70, 80);
-        int cellSize = 100;
-        int middleX = (5 * cellSize) + (cellSize - 70) / 2;
-        int middleY = (5 * cellSize) + (cellSize - 80) / 2;
-       
-        //characterLabel.setVisible(true);
-        jpPlayGround.add(characterLabel); // Ensure this is added last for layering
-        jpPlayGround.setComponentZOrder(characterLabel, 0);
-        //jpPlayGround.revalidate();
-        //jpPlayGround.repaint();
-    }
-    private void spaceMouseClicked(MouseEvent evt) {
-    // Implement logic for when the label is clicked
-    System.out.println("Label clicked!");
-}
-
-private void spaceMouseEntered(MouseEvent evt) {
-    // Change the label appearance when the mouse enters, e.g., set background color
-    JLabel label = (JLabel) evt.getSource();
-    label.setBackground(Color.LIGHT_GRAY); // Example highlight color
-}
-
-private void spaceMouseExited(MouseEvent evt) {
-    // Revert the label appearance when the mouse exits
-    JLabel label = (JLabel) evt.getSource();
-    label.setIcon(LoadImage.loadImageAdjusted(RESOURCEPATH+"baseDimmed.png",ROWS*8,COLS*5)); // Resets to default color
-}
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jpPlayGround;
     // End of variables declaration//GEN-END:variables
 }
