@@ -89,8 +89,8 @@ public class Player implements Runnable{
                 if (serverMessage.equals("Your Turn")) {
                     isMyTurn=true;
                     initSearchWord();
-                    isMyTurn=true;
-                    initMemoryPath();
+                    //isMyTurn=true;
+                    //initMemoryPath();
                     
                 }
 

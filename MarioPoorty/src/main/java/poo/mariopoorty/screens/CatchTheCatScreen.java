@@ -5,8 +5,11 @@
 package poo.mariopoorty.screens;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +25,7 @@ public class CatchTheCatScreen extends javax.swing.JFrame {
      private static final String RESOURCEPATH = "/CatchTheCatGame/";
      private final JLabel[][] matrizSpacesLabels;
      private final ImageIcon spaceImage;
+     private JLabel characterLabel;
     /**
      * Creates new form CatchTheCatScreen
      */
@@ -32,10 +36,13 @@ public class CatchTheCatScreen extends javax.swing.JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setResizable(false);
         
-        //spaceImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"block.png",ROWS*7,COLS*5);
-        spaceImage=new SpriteSelector(RESOURCEPATH+"cat.png",SpriteCatPositionsEnum.LEFT);
+        spaceImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"base.png",ROWS*8,COLS*5);
+        //spaceImage=new SpriteSelector(RESOURCEPATH+"cat.png",SpriteCatPositionsEnum.LEFT);
         matrizSpacesLabels=new JLabel[ROWS][COLS];
+         //initCharacter();
         putSpaces();
+        
+       
     }
 
     /**
@@ -103,45 +110,70 @@ public class CatchTheCatScreen extends javax.swing.JFrame {
  
 
 
-    private void putSpaces(){
-        this.jpPlayGround.setLayout(new GridLayout(ROWS, COLS)); 
-        jpPlayGround.setPreferredSize(new Dimension(COLS * 10, ROWS * 53)); 
+    private void putSpaces() {
+        jpPlayGround.setLayout(new GridLayout(ROWS, COLS));
+        jpPlayGround.setPreferredSize(new Dimension(COLS * 53, ROWS * 50)); // Adjusted for better sizing
 
+        for (int j = 0; j < ROWS; j++) {
+            for (int i = 0; i < COLS; i++) {
+                matrizSpacesLabels[i][j] = new JLabel(spaceImage);
+                matrizSpacesLabels[i][j].setVisible(true);
+                jpPlayGround.add(matrizSpacesLabels[i][j]);
 
-        for (int j = 0; j < ROWS; j++) { 
-            for (int i = 0; i <COLS; i++) {
-                this.matrizSpacesLabels[i][j] = new JLabel(spaceImage);
-                this.matrizSpacesLabels[i][j].setVisible(true);
-                this.jpPlayGround.add(matrizSpacesLabels[i][j]);
-                /*
-                this.matrizSpacesLabels[i][j].addMouseListener(new MouseAdapter() {
+                matrizSpacesLabels[i][j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent evt) {
-                        cellMouseClicked(evt);
+                        spaceMouseClicked(evt);
                     }
 
                     @Override
                     public void mouseEntered(MouseEvent evt) {
-                        cellMouseEntered(evt);
+                        spaceMouseEntered(evt);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent evt) {
-                        cellMouseExited(evt);
+                        spaceMouseExited(evt);
                     }
                 });
-                */
-                //this.currentRow=-1;
-
             }
         }
 
-    jpPlayGround.revalidate(); 
-    jpPlayGround.repaint(); 
-    
-    
-    
+        jpPlayGround.revalidate();
+        jpPlayGround.repaint();
     }
+
+    private void initCharacter() {
+        characterLabel = new JLabel(new SpriteSelector(RESOURCEPATH + "cat.png").getSpriteLabel());
+        characterLabel.setSize(70, 80);
+        int cellSize = 100;
+        int middleX = (5 * cellSize) + (cellSize - 70) / 2;
+        int middleY = (5 * cellSize) + (cellSize - 80) / 2;
+       
+        //characterLabel.setVisible(true);
+        jpPlayGround.add(characterLabel); // Ensure this is added last for layering
+        jpPlayGround.setComponentZOrder(characterLabel, 0);
+        //jpPlayGround.revalidate();
+        //jpPlayGround.repaint();
+    }
+    private void spaceMouseClicked(MouseEvent evt) {
+    // Implement logic for when the label is clicked
+    System.out.println("Label clicked!");
+}
+
+private void spaceMouseEntered(MouseEvent evt) {
+    // Change the label appearance when the mouse enters, e.g., set background color
+    JLabel label = (JLabel) evt.getSource();
+    label.setBackground(Color.LIGHT_GRAY); // Example highlight color
+}
+
+private void spaceMouseExited(MouseEvent evt) {
+    // Revert the label appearance when the mouse exits
+    JLabel label = (JLabel) evt.getSource();
+    label.setIcon(LoadImage.loadImageAdjusted(RESOURCEPATH+"baseDimmed.png",ROWS*8,COLS*5)); // Resets to default color
+}
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jpPlayGround;
