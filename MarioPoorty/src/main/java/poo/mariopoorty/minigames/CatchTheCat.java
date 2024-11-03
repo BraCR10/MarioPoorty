@@ -85,7 +85,7 @@ public class CatchTheCat extends MiniGames{
                 screen.getGameSatate().setBackground(Color.GREEN);
                 Thread t = new Thread(() -> {
                 try {
-                    Thread.sleep(800);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

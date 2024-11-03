@@ -59,7 +59,7 @@ public class ThreadCatJumpAnimation extends Thread {
                  if(targetX==0 || targetX==screen.getROWS()-1 || targetY==0 ||targetY==screen.getCOLS()-1 ){
                      screen.getGameSatate().setText("You lost!");
                      screen.getGameSatate().setBackground(Color.red);
-                     sleep(800);
+                     sleep(1500);
                      screen.getSettings().endGame();
                  
                  }
