@@ -14,7 +14,7 @@ import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 import poo.mariopoorty.screens.BomberMarioScreen;
 import poo.mariopoorty.threads.ThreadExplotionAnimation;
-//import poo.mariopoorty.threads.ThreadTimerWordSearch;
+
 
 /**
  *
@@ -38,11 +38,9 @@ public class BomberMario extends MiniGames{
         randomChestPositions=new Point[4];
         for (int i = 0; i < 4; i++) {
             randomChestPositions[i]=(new Point(randomNumber.nextInt(boardDisplaySize),randomNumber.nextInt(boardDisplaySize)));
-            System.out.println(randomChestPositions[i]);
         }
-        
         bombsCounter=7;
-        chestFoundPartCounter=0;
+        chestFoundPartCounter=1;
     }
         
     
@@ -50,12 +48,11 @@ public class BomberMario extends MiniGames{
     
   
     
-    private void startBoard(){
+    private void configurateScreen(){
        try {
             BomberMarioScreen screen = (BomberMarioScreen) gamePanel;
             screen.setBoardSize(boardDisplaySize);
-            
-           screen.drawScreen();
+            screen.drawScreen();
             
         } catch (Exception e) {
             throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -64,11 +61,9 @@ public class BomberMario extends MiniGames{
     
     @Override
     public void startGame() {
-//        this.board.setVisible(false);
+        this.board.setVisible(false);
         this.gamePanel=new BomberMarioScreen(this);
-        //generateBoard();
-//        startBoard();
-         startBoard();
+        configurateScreen();
         this.gamePanel.setVisible(true);
     }
 
@@ -92,13 +87,14 @@ public class BomberMario extends MiniGames{
     
     public void produceExplotion(int sourceX,int sourceY,Icon image){
         BomberMarioScreen screen = (BomberMarioScreen)gamePanel;
-        if(screen.getBombLabels()[0].getText().endsWith("(*)"))
+        String validation="<<<";
+        if(screen.getBombLabels()[0].getText().endsWith(validation))
             explotion(1,sourceX,sourceY);
-        if(screen.getBombLabels()[1].getText().endsWith("(*)"))
+        if(screen.getBombLabels()[1].getText().endsWith(validation))
             explotion(2,sourceX,sourceY);
-        if(screen.getBombLabels()[2].getText().endsWith("(*)"))
+        if(screen.getBombLabels()[2].getText().endsWith(validation))
             explotion(3,sourceX,sourceY);
-        if(screen.getBombLabels()[3].getText().endsWith("(*)"))
+        if(screen.getBombLabels()[3].getText().endsWith(validation))
             explotion(4,sourceX,sourceY);
         
         
@@ -110,12 +106,12 @@ public class BomberMario extends MiniGames{
         BomberMarioScreen screen = (BomberMarioScreen)gamePanel;
         if(screen.getMatrizButtons()[sourceX][sourceY]!=null && 
            screen.getMatrizButtons()[sourceX][sourceY].getIcon()==screen.getMisteryBox()){
-
+            this.bombsCounter--;
+            screen.getLabelCounter().setText("Enable bombs: "+this.bombsCounter);
             Thread t = new ThreadExplotionAnimation(screen,sourceX,sourceY,randomChestPositions,explotionType);
             t.start();
             
-            this.bombsCounter--;
-            screen.getLabelCounter().setText("Enable bombs: "+this.bombsCounter);
+
         }
     }
     

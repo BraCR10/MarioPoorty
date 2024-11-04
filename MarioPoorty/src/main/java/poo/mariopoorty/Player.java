@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import poo.mariopoorty.minigames.BomberMario;
 import poo.mariopoorty.minigames.CatchTheCat;
 import poo.mariopoorty.minigames.MemoryPath;
 import poo.mariopoorty.minigames.MiniGames;
@@ -94,6 +95,8 @@ public class Player implements Runnable{
                     initMemoryPath();
                     isMyTurn=true;
                     initCatchTheCat();
+                    isMyTurn=true;
+                    initBomberMario();
                     
                 }
 
@@ -118,6 +121,11 @@ public class Player implements Runnable{
     void initCatchTheCat(){
         //Test
         miniGame = new CatchTheCat(players, "Search Word","Play alone",1, miniGameScreen, board);
+        miniGame.playTurn();
+    }
+    void initBomberMario(){
+        //Test
+        miniGame = new BomberMario(players, "Search Word","Play alone",1, miniGameScreen, board);
         miniGame.playTurn();
     }
         

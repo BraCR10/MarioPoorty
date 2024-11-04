@@ -10,8 +10,6 @@ import poo.mariopoorty.minigames.BomberMario;
 import poo.mariopoorty.minigames.MiniGames;
 
 
-
-
 /**
  *
  * @author Brian
@@ -21,7 +19,9 @@ public class MarioPoorty {
 
     public static void main(String[] args) {
 
-        //new GameServer();
+        new GameServer();
+        
+        /*test
         ArrayList<Player> p = new ArrayList<>();
         Player a = new Player();
         p.add(a);
@@ -30,7 +30,7 @@ public class MarioPoorty {
         MiniGames m = new BomberMario( p, "","",5, j,  b);
         
         m.startGame();
-        
+        */
         
         
     }

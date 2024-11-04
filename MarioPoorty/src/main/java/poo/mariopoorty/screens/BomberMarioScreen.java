@@ -13,7 +13,7 @@ import poo.mariopoorty.minigames.LoadImage;
 
 public class BomberMarioScreen extends JFrame {
     private int boardSize ;
-    private JLabel[][] matrizButtons;
+    private JLabel[][] matrizMisteryBox;
     private JPanel jpBoard;
     private JPanel screenPanel;
     private ImageIcon misteryBox,misteryBoxEmpty,bomb_simple,bomb_double,bomb_cross
@@ -22,7 +22,7 @@ public class BomberMarioScreen extends JFrame {
     private BomberMario settings;
     private  JTextField[] bombLabels ;
     private boolean enableExplotionFlag;
-    private  JLabel labelCounter;
+    private  JTextField labelCounter;
     
     
     public BomberMarioScreen(BomberMario settings) {
@@ -35,18 +35,18 @@ public class BomberMarioScreen extends JFrame {
 
         screenPanel = new JPanel(new BorderLayout());
         jpBoard = new JPanel(new GridLayout(boardSize, boardSize));
-        matrizButtons = new JLabel[boardSize][boardSize];
+        matrizMisteryBox = new JLabel[boardSize][boardSize];
 
         int bombSize = 90;
         loadImages(bombSize);
 
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                matrizButtons[i][j] = new JLabel(misteryBox);
-                matrizButtons[i][j].setBackground(Color.WHITE);
-                matrizButtons[i][j].setPreferredSize(new Dimension(10, 10));
-                jpBoard.add(matrizButtons[i][j]);
-                labelsMisteryBoxEvents(matrizButtons[i][j]);
+                matrizMisteryBox[i][j] = new JLabel(misteryBox);
+                matrizMisteryBox[i][j].setBackground(Color.WHITE);
+                matrizMisteryBox[i][j].setPreferredSize(new Dimension(10, 10));
+                jpBoard.add(matrizMisteryBox[i][j]);
+                labelsMisteryBoxEvents(matrizMisteryBox[i][j]);
             }
         }
 
@@ -86,9 +86,11 @@ public class BomberMarioScreen extends JFrame {
         leftPanel.setBackground(new Color(128, 0, 0, 128));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        labelCounter = new JLabel("Enable bombs: " + settings.getBombCounter());
+        labelCounter = new JTextField("Enable bombs: " + settings.getBombCounter());
         labelCounter.setForeground(Color.WHITE);
         labelCounter.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelCounter.setEditable(false);
+        labelCounter.setBackground(new Color(183, 119, 119));
         leftPanel.add(labelCounter);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
@@ -157,7 +159,7 @@ public class BomberMarioScreen extends JFrame {
     }
 
     public void bombActionPerformed(MouseEvent e) {
-        String check = "(*)";
+        String check = "<<<";
         JLabel sourceLabel = (JLabel) e.getSource();
 
         for ( JTextField bombLabel : bombLabels) {
@@ -178,7 +180,7 @@ public class BomberMarioScreen extends JFrame {
     public void misteryBoxActionPerformed(MouseEvent e) {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                if(((JLabel)e.getSource())==matrizButtons[i][j] && enableExplotionFlag){
+                if(((JLabel)e.getSource())==matrizMisteryBox[i][j] && enableExplotionFlag){
                     settings.produceExplotion(i, j,((JLabel)e.getSource()).getIcon());
                 }
             }
@@ -190,7 +192,7 @@ public class BomberMarioScreen extends JFrame {
     }
 
     public JLabel[][] getMatrizButtons() {
-        return matrizButtons;
+        return matrizMisteryBox;
     }
 
     public JPanel getJpBoard() {
@@ -273,7 +275,7 @@ public class BomberMarioScreen extends JFrame {
         this.enableExplotionFlag = enableExplotionFlag;
     }
 
-    public JLabel getLabelCounter() {
+    public JTextField getLabelCounter() {
         return labelCounter;
     }
 

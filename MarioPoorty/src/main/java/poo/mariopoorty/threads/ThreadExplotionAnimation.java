@@ -5,6 +5,7 @@
 package poo.mariopoorty.threads;
 
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 import java.util.logging.Level;
@@ -51,8 +52,30 @@ public class ThreadExplotionAnimation extends Thread{
                     lineExplotion();
                     break;
             }
-
-           screen.setEnableExplotionFlag(true);
+           
+            if(screen.getSettings().getChestFoundPartCounter()>4){
+                screen.getLabelCounter().setText("You won!!");
+                screen.getLabelCounter().setBackground(Color.GREEN);
+                screen.getLabelCounter().repaint();
+               try {
+                    sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ThreadExplotionAnimation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+               screen.getSettings().endGame();
+            }
+            if(screen.getSettings().getBombCounter()==0){
+                 screen.getLabelCounter().setText("You lost!!");
+                 screen.getLabelCounter().setBackground(Color.BLACK);
+                 screen.getLabelCounter().repaint();
+                try {
+                    sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ThreadExplotionAnimation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 screen.getSettings().endGame();
+            }
+            screen.setEnableExplotionFlag(true);
             break;
         }
     }
@@ -109,7 +132,7 @@ public class ThreadExplotionAnimation extends Thread{
 
                     if (posX >= 0 && posX < screen.getMatrizButtons().length &&
                         posY >= 0 && posY < screen.getMatrizButtons()[0].length &&
-                        screen.getMatrizButtons()[posX][posY].getIcon() == screen.getMisteryBox()) {
+                        screen.getMatrizButtons()[posX][posY].getIcon() == screen.getExplotion()) {
                         screen.getMatrizButtons()[posX][posY].setIcon(checkChestPosition(posX, posY));
                     }
                 }
@@ -155,7 +178,7 @@ public class ThreadExplotionAnimation extends Thread{
 
                 if (posX >= 0 && posX < screen.getMatrizButtons().length &&
                     posY >= 0 && posY < screen.getMatrizButtons()[0].length &&
-                    screen.getMatrizButtons()[posX][posY].getIcon() == screen.getMisteryBox()) {
+                    screen.getMatrizButtons()[posX][posY].getIcon() == screen.getExplotion()) {
                     screen.getMatrizButtons()[posX][posY].setIcon(checkChestPosition(posX, posY));
                 }
             }
@@ -207,7 +230,7 @@ public class ThreadExplotionAnimation extends Thread{
                 int posY = sourceY;
 
                 if (posX >= 0 && posX < screen.getMatrizButtons().length &&
-                    screen.getMatrizButtons()[posX][posY].getIcon() == screen.getMisteryBox()) {
+                    screen.getMatrizButtons()[posX][posY].getIcon() == screen.getExplotion()) {
                     screen.getMatrizButtons()[posX][posY].setIcon(checkChestPosition(posX, posY));
                 }
             }
@@ -217,7 +240,7 @@ public class ThreadExplotionAnimation extends Thread{
                 int posY = sourceY + j;
 
                 if (posY >= 0 && posY < screen.getMatrizButtons()[0].length &&
-                    screen.getMatrizButtons()[posX][posY].getIcon() == screen.getMisteryBox()) {
+                    screen.getMatrizButtons()[posX][posY].getIcon() == screen.getExplotion()) {
                     screen.getMatrizButtons()[posX][posY].setIcon(checkChestPosition(posX, posY));
                 }
             }
@@ -234,16 +257,16 @@ public class ThreadExplotionAnimation extends Thread{
                 
                 switch (screen.getSettings().getChestFoundPartCounter()) {
                     case 1:
-                        screen.getSettings().setChestFoundPartCounter(1);
+                        screen.getSettings().setChestFoundPartCounter(2);
                         return screen.getChest_bottomleft(); 
                     case 2:
-                        screen.getSettings().setChestFoundPartCounter(2);
-                        return screen.getChest_bottomright(); 
-                    case 3:
                         screen.getSettings().setChestFoundPartCounter(3);
+                        return screen.getChest_topright(); 
+                    case 3:
+                        screen.getSettings().setChestFoundPartCounter(4);
                         return screen.getChest_topleft(); 
                     case 4:
-                        screen.getSettings().setChestFoundPartCounter(4);
+                         screen.getSettings().setChestFoundPartCounter(5);
                         return screen.getChest_bottomright(); 
 
                 }
