@@ -4,16 +4,16 @@
  */
 package poo.mariopoorty.minigames;
 
-import poo.mariopoorty.screens.WordSearchScreen;
-import java.awt.Color;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.JButton;
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import poo.mariopoorty.Board;
 import poo.mariopoorty.Player;
 import poo.mariopoorty.screens.BomberMarioScreen;
+import poo.mariopoorty.threads.ThreadExplotionAnimation;
 //import poo.mariopoorty.threads.ThreadTimerWordSearch;
 
 /**
@@ -21,88 +21,45 @@ import poo.mariopoorty.screens.BomberMarioScreen;
  * @author Brian
  */
 public class BomberMario extends MiniGames{
-    ArrayList<String> wordsList;
-    ArrayList<String> selectedWordsList;
-    ArrayList<Point> randomChestPositions;
+
+    Point[] randomChestPositions;
     int boardDisplaySize;
     static int[] enableSizes={10,15,20};
     static Random randomNumber = new Random(); 
-    int bombsCounter;
+    int bombsCounter, chestFoundPartCounter;
 
     public BomberMario( ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel, Board board) {
         super(players, type, description, currentPlayers, gamePanel, board);
-        
-        this.wordsList = new ArrayList<>();
-        
-        
-        this.selectedWordsList = new ArrayList<>();
-        //chooseRandomWordsPosition();
+
         
         this.boardDisplaySize=randomNumber.nextInt(enableSizes.length);
         this.boardDisplaySize=enableSizes[boardDisplaySize];
         
-        randomChestPositions=new ArrayList<>();
+        randomChestPositions=new Point[4];
         for (int i = 0; i < 4; i++) {
-            randomChestPositions.add(new Point(randomNumber.nextInt(boardDisplaySize),randomNumber.nextInt(boardDisplaySize)));
+            randomChestPositions[i]=(new Point(randomNumber.nextInt(boardDisplaySize),randomNumber.nextInt(boardDisplaySize)));
+            System.out.println(randomChestPositions[i]);
         }
         
-        bombsCounter=3;
-       
+        bombsCounter=7;
+        chestFoundPartCounter=0;
     }
+        
+    
 
-    private void generateBoard(){
-        
-        
-        /*
-        for (int i = 0; i < boardDisplaySize; i++) {
-            for (int j = 0; j < boardDisplaySize; j++) {
-                matrizChars[i][j] = ' '; 
-            }
-        }
-        
-        String word;
-        for (String i : selectedWordsList) {
-            word=i;   
-        }
-        
-        for (int i = 0; i < boardDisplaySize; i++) {
-            for (int j = 0; j < boardDisplaySize; j++) {
-                 if (matrizChars[i][j] == ' ') 
-                    matrizChars[i][j] = (char) ('A'+randomNumber.nextInt(26) ); //A - Z
-            }
-        }*/
-    
-    
-    }         
-    
-   
-    private  void chooseRandomWordsPosition(){
-        //Get 4 random words 
-        while (this.selectedWordsList.size()<4) {
-             int number =randomNumber.nextInt(100);
-             if(!selectedWordsList.contains(wordsList.get(number)))//to avoid the same word
-                selectedWordsList.add(wordsList.get(number));
-        }
-    }
     
   
     
     private void startBoard(){
-       // try {
+       try {
             BomberMarioScreen screen = (BomberMarioScreen) gamePanel;
             screen.setBoardSize(boardDisplaySize);
-            //screen.setBoardChars(matrizChars);
-           // screen.setWord1(selectedWordsList.get(0));
-            //screen.setWord2(selectedWordsList.get(1));
-            //screen.setWord3(selectedWordsList.get(2));
-            //screen.setWord4(selectedWordsList.get(3));
-           screen.drawScreen();
-            //Thread timer = new ThreadTimerWordSearch(this,screen);
-            //timer.start();
             
-        //} catch (Exception e) {
-          //  throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        //}  
+           screen.drawScreen();
+            
+        } catch (Exception e) {
+            throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }  
     }
     
     @Override
@@ -117,13 +74,7 @@ public class BomberMario extends MiniGames{
 
     @Override
     public void endGame() {
-        //Cleanning static vars
-        BomberMario.correctButtons.clear();
-        BomberMario.pressedButtons.clear();
-        BomberMario.bufferWordsSeleted="";
-        BomberMario.counterCollectedWords=0;
         this.board.setVisible(true);
-        //Deleting the screen
         this.gamePanel.dispose();
     }
 
@@ -136,43 +87,53 @@ public class BomberMario extends MiniGames{
             }
         }
     }
-
     
-    //Methods to check words in the screen
-    private static String bufferWordsSeleted="";
-    private static final ArrayList<JButton> pressedButtons = new ArrayList<>();
-    private static final ArrayList<JButton> correctButtons = new ArrayList<>();
-    private static int counterCollectedWords; //True for win and False for lose
-    public static void wordsChecker(JButton sourceButton){
-        if (!pressedButtons.contains(sourceButton)) {
-            bufferWordsSeleted += sourceButton.getText();
-            pressedButtons.add(sourceButton);
-        }
+    
+    
+    public void produceExplotion(int sourceX,int sourceY,Icon image){
+        BomberMarioScreen screen = (BomberMarioScreen)gamePanel;
+        if(screen.getBombLabels()[0].getText().endsWith("(*)"))
+            explotion(1,sourceX,sourceY);
+        if(screen.getBombLabels()[1].getText().endsWith("(*)"))
+            explotion(2,sourceX,sourceY);
+        if(screen.getBombLabels()[2].getText().endsWith("(*)"))
+            explotion(3,sourceX,sourceY);
+        if(screen.getBombLabels()[3].getText().endsWith("(*)"))
+            explotion(4,sourceX,sourceY);
+        
+        
+        
+        
     }
-    public static void checkSeletedWord(String w1,String w2,String w3,String w4 ){
-         
-         if(bufferWordsSeleted.equals(w4)||
-            bufferWordsSeleted.equals(w3)||
-            bufferWordsSeleted.equals(w2)||
-            bufferWordsSeleted.equals(w1)){
-             for (JButton pressedButton : pressedButtons) {
-                 correctButtons.add(pressedButton);
-                 
-             }
-             counterCollectedWords++;
-        }
-        for (JButton correctButton : correctButtons) {
-             correctButton.setBackground(Color.YELLOW);
-         }
-        pressedButtons.clear();
-        bufferWordsSeleted="";
-     }
-    public static int getCounterCollectedWords() {
-        return counterCollectedWords;
-    }
+   
+    private void explotion(int explotionType,int sourceX,int sourceY){
+        BomberMarioScreen screen = (BomberMarioScreen)gamePanel;
+        if(screen.getMatrizButtons()[sourceX][sourceY]!=null && 
+           screen.getMatrizButtons()[sourceX][sourceY].getIcon()==screen.getMisteryBox()){
 
+            Thread t = new ThreadExplotionAnimation(screen,sourceX,sourceY,randomChestPositions,explotionType);
+            t.start();
+            
+            this.bombsCounter--;
+            screen.getLabelCounter().setText("Enable bombs: "+this.bombsCounter);
+        }
+    }
+    
+   
     public int getBombCounter() {
         return bombsCounter;
+    }
+
+    public void setBombsCounter(int bombsCounter) {
+        this.bombsCounter = bombsCounter;
+    }
+
+    public int getChestFoundPartCounter() {
+        return chestFoundPartCounter;
+    }
+
+    public void setChestFoundPartCounter(int chestFoundPartCounter) {
+        this.chestFoundPartCounter = chestFoundPartCounter;
     }
 
   

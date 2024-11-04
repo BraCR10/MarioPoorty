@@ -16,8 +16,8 @@ import poo.mariopoorty.screens.MemoryPathScreen;
  */
 public class ThreadCellVerifierMemoryPath extends Thread {
 
-    private volatile boolean isRunning = true;
-    private volatile boolean isPaused = false;
+    private  boolean isRunning = true;
+    private  boolean isPaused = false;
     private final boolean cellState;
     private final JLabel cell;
     private final MemoryPathScreen screen;
