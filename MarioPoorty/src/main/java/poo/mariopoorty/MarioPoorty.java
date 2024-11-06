@@ -30,8 +30,8 @@ public class MarioPoorty {
         JFrame j=null;
         MiniGames m = new GuessWho( p, "","",5, j,  b);
         
-        m.startGame();
-        */
+        m.startGame();*/
+       
         
         
     }

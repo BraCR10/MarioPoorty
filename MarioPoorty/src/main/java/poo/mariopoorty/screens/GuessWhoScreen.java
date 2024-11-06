@@ -4,21 +4,20 @@
  */
 package poo.mariopoorty.screens;
 
-import java.awt.Color;
+
 import java.awt.Dimension;
-import java.awt.Graphics2D;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import javax.swing.BorderFactory;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import poo.mariopoorty.minigames.GuessWho;
 import poo.mariopoorty.minigames.LoadImage;
 
 /**
@@ -26,73 +25,62 @@ import poo.mariopoorty.minigames.LoadImage;
  * @author Brian Ramirez
  */
 public class GuessWhoScreen extends javax.swing.JFrame {
+     private  int MATRIZSIZE=10;
      private static final String RESOURCEPATH = "/GuessWho/";
      private ImageIcon[][] imageSegments;
+     private JLabel[][] misteryBoxMatriz;
+     private ArrayList<ImageIcon> images;
+     private GuessWho settings;
+       ArrayList<String> imagesPath ;
     /**
      * Creates new form GuessWhoScreen
+     * @param settings
      */
-    public GuessWhoScreen() {
+    public GuessWhoScreen(GuessWho settings) {
+
         initComponents();
-        setTitle("GuessWho");
+        setTitle("Guess Who ?");
         setSize(1250, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        
-        this.imageSegments=new ImageIcon[10][10];
+        this.settings=settings;
+        MATRIZSIZE=settings.getMATRIZSIZE();
+        this.imageSegments=new ImageIcon[MATRIZSIZE][MATRIZSIZE];
+        this.misteryBoxMatriz=new JLabel[MATRIZSIZE][MATRIZSIZE];
+        this.imagesPath=settings.getImagesPath();
+        this.images=new ArrayList<>();
         initImages();
-        ImageIcon image;
-        int width=600;
-        int height=600;
-        
-        image=LoadImage.loadImageAdjusted(RESOURCEPATH+"bullet.png", width, height);
-        initPlayGround(image);
 
     }
 
-    private void initPlayGround(ImageIcon icon) {
+    public void initPlayGround() {
         jpPlayGround.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         int labelWidth = 50; 
         int labelHeight = 50; 
 
-        BufferedImage bufferedImage = new BufferedImage(
-            icon.getIconWidth(),
-            icon.getIconHeight(),
-            BufferedImage.TYPE_INT_ARGB
-        );
-        Graphics2D g2d = bufferedImage.createGraphics();
-        g2d.drawImage(icon.getImage(), 0, 0, null);
-        g2d.dispose();
-
-        Image scaledImage = bufferedImage.getScaledInstance(labelWidth * 10, labelHeight * 10, Image.SCALE_SMOOTH);
-        BufferedImage scaledBufferedImage = new BufferedImage(labelWidth * 10, labelHeight * 10, BufferedImage.TYPE_INT_ARGB);
-        g2d = scaledBufferedImage.createGraphics();
-        g2d.drawImage(scaledImage, 0, 0, null);
-        g2d.dispose();
-
-        ArrayList<ImageIcon> imageSegmentsList = new ArrayList<>();
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
-                BufferedImage segment = scaledBufferedImage.getSubimage(col * labelWidth, row * labelHeight, labelWidth, labelHeight);
-                imageSegmentsList.add(new ImageIcon(segment));
-            }
-        }
-
-        Collections.shuffle(imageSegmentsList);
+        ArrayList<ImageIcon> imageSegmentsList =  settings.suffleImage();
         
         int index = 0;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < MATRIZSIZE; i++) {
+            for (int j = 0; j < MATRIZSIZE; j++) {
                 JLabel label = new JLabel();
                 label.setPreferredSize(new Dimension(labelWidth, labelHeight));
                 label.setHorizontalAlignment(SwingConstants.CENTER);
                 label.setIcon(LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBox.jpg",labelWidth , labelHeight));
                 imageSegments[i][j]=imageSegmentsList.get(index);
+                misteryBoxMatriz[i][j]=label;
                 index++;
-
+                label.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent e) {
+                        settings.misteryBoxClicked(e);
+                    }
+                });
                 gbc.gridx = j;
                 gbc.gridy = i;
+                
                 jpPlayGround.add(label, gbc);
             }
         }
@@ -128,12 +116,11 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         imageLabel15 = new javax.swing.JLabel();
         jpPlayGround = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        jtAttempts = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
-        setMaximumSize(new java.awt.Dimension(1250, 650));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -151,6 +138,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         jpImages.setForeground(new java.awt.Color(204, 0, 0));
 
         imageLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel3MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel3MouseEntered(evt);
             }
@@ -160,6 +150,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel5MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel5MouseEntered(evt);
             }
@@ -169,6 +162,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel2MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel2MouseEntered(evt);
             }
@@ -178,6 +174,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel1MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel1MouseEntered(evt);
             }
@@ -188,6 +187,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
 
         imageLabel4.setLabelFor(this);
         imageLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel4MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel4MouseEntered(evt);
             }
@@ -197,6 +199,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel6MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel6MouseEntered(evt);
             }
@@ -206,6 +211,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel11MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel11MouseEntered(evt);
             }
@@ -215,6 +223,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel10MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel10MouseEntered(evt);
             }
@@ -224,6 +235,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel12MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel12MouseEntered(evt);
             }
@@ -233,6 +247,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel9MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel9MouseEntered(evt);
             }
@@ -242,6 +259,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel8MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel8MouseEntered(evt);
             }
@@ -251,6 +271,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel7MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel7MouseEntered(evt);
             }
@@ -260,6 +283,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel13MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel13MouseEntered(evt);
             }
@@ -269,6 +295,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel14MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel14MouseEntered(evt);
             }
@@ -278,6 +307,9 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         });
 
         imageLabel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageLabel15MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 imageLabel15MouseEntered(evt);
             }
@@ -308,36 +340,33 @@ public class GuessWhoScreen extends javax.swing.JFrame {
                 .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpImagesLayout.createSequentialGroup()
                         .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(imageLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(imageLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpImagesLayout.createSequentialGroup()
-                                .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(imageLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(imageLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(imageLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jpImagesLayout.createSequentialGroup()
-                                        .addComponent(imageLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(imageLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(jpImagesLayout.createSequentialGroup()
-                                        .addComponent(imageLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(imageLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(imageLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jpImagesLayout.createSequentialGroup()
-                                .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(imageLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(imageLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(imageLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jpImagesLayout.createSequentialGroup()
-                                        .addComponent(imageLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(imageLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jpImagesLayout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(imageLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(imageLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                .addComponent(imageLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jpImagesLayout.createSequentialGroup()
+                        .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(imageLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(imageLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jpImagesLayout.createSequentialGroup()
+                                .addComponent(imageLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(imageLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jpImagesLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(imageLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(imageLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jpImagesLayout.createSequentialGroup()
                         .addComponent(imageLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -380,10 +409,11 @@ public class GuessWhoScreen extends javax.swing.JFrame {
                             .addComponent(imageLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(imageLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(imageLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imageLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imageLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(imageLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jpImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(imageLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(imageLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -405,10 +435,11 @@ public class GuessWhoScreen extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
-        jTextField1.setText("Attempts :");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jtAttempts.setEditable(false);
+        jtAttempts.setText("Blocks to be removed   :");
+        jtAttempts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jtAttemptsActionPerformed(evt);
             }
         });
 
@@ -421,17 +452,16 @@ public class GuessWhoScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 408, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(81, 81, 81))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtAttempts, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(214, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jtAttempts)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -445,7 +475,7 @@ public class GuessWhoScreen extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(531, Short.MAX_VALUE))
+                .addContainerGap(807, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -453,7 +483,7 @@ public class GuessWhoScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(452, 452, 452)
+                .addGap(434, 434, 434)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -463,9 +493,8 @@ public class GuessWhoScreen extends javax.swing.JFrame {
 
     private void imageLabel15MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel15MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"waluigi.png", width, height);
+
+        ImageIcon image = images.get(14);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel15MouseExited
 
@@ -475,13 +504,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"waluigi_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=14;
     }//GEN-LAST:event_imageLabel15MouseEntered
 
     private void imageLabel14MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel14MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"wario.png", width, height);
+ 
+        ImageIcon image = images.get(13);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel14MouseExited
 
@@ -491,13 +520,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"wario_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=13;
     }//GEN-LAST:event_imageLabel14MouseEntered
 
     private void imageLabel13MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel13MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"shyguy.png", width, height);
+
+        ImageIcon image = images.get(12);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel13MouseExited
 
@@ -507,13 +536,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"shyguy_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=12;
     }//GEN-LAST:event_imageLabel13MouseEntered
 
     private void imageLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel7MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"donkey.png", width, height);
+ 
+        ImageIcon image = images.get(6);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel7MouseExited
 
@@ -523,13 +552,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"donkey_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=6;
     }//GEN-LAST:event_imageLabel7MouseEntered
 
     private void imageLabel8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel8MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"goomba.png", width, height);
+
+        ImageIcon image = images.get(7);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel8MouseExited
 
@@ -539,13 +568,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"goomba_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=7;
     }//GEN-LAST:event_imageLabel8MouseEntered
 
     private void imageLabel9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel9MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"koopa.png", width, height);
+
+        ImageIcon image = images.get(8);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel9MouseExited
 
@@ -555,13 +584,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"koopa_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=8;
     }//GEN-LAST:event_imageLabel9MouseEntered
 
     private void imageLabel12MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel12MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"chainchop.png", width, height);
+
+        ImageIcon image = images.get(11);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel12MouseExited
 
@@ -571,13 +600,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"chainchop_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=11;
     }//GEN-LAST:event_imageLabel12MouseEntered
 
     private void imageLabel10MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel10MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"bobonmb.png", width, height);
+
+        ImageIcon image = images.get(9);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel10MouseExited
 
@@ -587,13 +616,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"bobonmb_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=9;
     }//GEN-LAST:event_imageLabel10MouseEntered
 
     private void imageLabel11MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel11MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"bullet.png", width, height);
+
+        ImageIcon image = images.get(10);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel11MouseExited
 
@@ -603,13 +632,14 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"bullet_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=10;
     }//GEN-LAST:event_imageLabel11MouseEntered
 
     private void imageLabel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel6MouseExited
         // TODO add your handling code here:
         int width=100;
         int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"daisy.png", width, height);
+        ImageIcon image = images.get(5);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel6MouseExited
 
@@ -619,13 +649,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"daisy_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=5;
     }//GEN-LAST:event_imageLabel6MouseEntered
 
     private void imageLabel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel4MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"bowser.png", width, height);
+
+        ImageIcon image = images.get(3);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel4MouseExited
 
@@ -635,13 +665,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"bowser_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=3;
     }//GEN-LAST:event_imageLabel4MouseEntered
 
     private void imageLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel1MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"mario.png", width, height);
+
+        ImageIcon image = images.get(0);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel1MouseExited
 
@@ -651,13 +681,13 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"mario_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=0;
     }//GEN-LAST:event_imageLabel1MouseEntered
 
     private void imageLabel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel2MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"luigi.png", width, height);
+
+        ImageIcon image = images.get(1);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel2MouseExited
 
@@ -667,13 +697,12 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"luigi_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=1;
     }//GEN-LAST:event_imageLabel2MouseEntered
 
     private void imageLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel5MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"toad.png", width, height);
+        ImageIcon image = images.get(4);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel5MouseExited
 
@@ -683,13 +712,12 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"toad_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=4;
     }//GEN-LAST:event_imageLabel5MouseEntered
 
     private void imageLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel3MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
-        ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"peach.png", width, height);
+        ImageIcon image = images.get(2);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel3MouseExited
 
@@ -699,97 +727,145 @@ public class GuessWhoScreen extends javax.swing.JFrame {
         int height=100;
         ImageIcon image = LoadImage.loadImageAdjusted(RESOURCEPATH+"peach_dimmed.png", width, height);
         ((JLabel)evt.getSource()).setIcon(image);
+        settings.counterMatrizPosition=2;
     }//GEN-LAST:event_imageLabel3MouseEntered
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jtAttemptsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtAttemptsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+        
+    }//GEN-LAST:event_jtAttemptsActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GuessWhoScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GuessWhoScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GuessWhoScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GuessWhoScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void imageLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel1MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel1MouseClicked
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GuessWhoScreen().setVisible(true);
-            }
-        });
-    }
-    void initImages(){
-            ImageIcon image;
+    private void imageLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel2MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+
+    }//GEN-LAST:event_imageLabel2MouseClicked
+
+    private void imageLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel3MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel3MouseClicked
+
+    private void imageLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel4MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel4MouseClicked
+
+    private void imageLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel5MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel5MouseClicked
+
+    private void imageLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel6MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel6MouseClicked
+
+    private void imageLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel7MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel7MouseClicked
+
+    private void imageLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel8MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel8MouseClicked
+
+    private void imageLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel9MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel9MouseClicked
+
+    private void imageLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel10MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel10MouseClicked
+
+    private void imageLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel11MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel11MouseClicked
+
+    private void imageLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel12MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel12MouseClicked
+
+    private void imageLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel13MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel13MouseClicked
+
+    private void imageLabel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel14MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel14MouseClicked
+
+    private void imageLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel15MouseClicked
+        // TODO add your handling code here:
+        settings.checkSelectedImage(evt);
+    }//GEN-LAST:event_imageLabel15MouseClicked
+
+    private void loadImages(){
+        ImageIcon image;
         int width=100;
         int height=100;
-        
-        image=LoadImage.loadImageAdjusted(RESOURCEPATH+"mario.png", width, height);
-        imageLabel1.setIcon(image);
-        
-        image=LoadImage.loadImageAdjusted(RESOURCEPATH+"luigi.png", width, height);
-        imageLabel2.setIcon(image);
-        
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "peach.png", width, height);
-        imageLabel3.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "bowser.png", width, height);
-        imageLabel4.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "toad.png", width, height);
-        imageLabel5.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "daisy.png", width, height);
-        imageLabel6.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "donkey.png", width, height);
-        imageLabel7.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "goomba.png", width, height);
-        imageLabel8.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "koopa.png", width, height);
-        imageLabel9.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "bobonmb.png", width, height);
-        imageLabel10.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "bullet.png", width, height);
-        imageLabel11.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "chainchop.png", width, height);
-        imageLabel12.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "shyguy.png", width, height);
-        imageLabel13.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "wario.png", width, height);
-        imageLabel14.setIcon(image);
-
-        image = LoadImage.loadImageAdjusted(RESOURCEPATH + "waluigi.png", width, height);
-        imageLabel15.setIcon(image);
+        for (int i = 0; i < 15; i++) {
+            image = LoadImage.loadImageAdjusted(RESOURCEPATH + imagesPath.get(i), width, height);
+            images.add(image);
+        }
     
     }
+    private void initImages(){
+        loadImages();
+        imageLabel1.setIcon(images.get(0));
+        imageLabel2.setIcon(images.get(1));
+        imageLabel3.setIcon(images.get(2));
+        imageLabel4.setIcon(images.get(3));
+        imageLabel5.setIcon(images.get(4));
+        imageLabel6.setIcon(images.get(5));
+        imageLabel7.setIcon(images.get(6));
+        imageLabel8.setIcon(images.get(7));
+        imageLabel9.setIcon(images.get(8));
+        imageLabel10.setIcon(images.get(9));
+        imageLabel11.setIcon(images.get(10));
+        imageLabel12.setIcon(images.get(11));
+        imageLabel13.setIcon(images.get(12));
+        imageLabel14.setIcon(images.get(13));
+        imageLabel15.setIcon(images.get(14));
+        
+    }
+    
+   
+    
+
+
+    public ImageIcon[][] getImageSegments() {
+        return imageSegments;
+    }
+
+    public JTextField getJtAttempts() {
+        return jtAttempts;
+    }
+
+    public JLabel[][] getMisteryBoxMatriz() {
+        return misteryBoxMatriz;
+    }
+
+    public ArrayList<String> getImagesPath() {
+        return imagesPath;
+    }
+
+    public ArrayList<ImageIcon> getImages() {
+        return images;
+    }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel imageLabel1;
@@ -811,8 +887,8 @@ public class GuessWhoScreen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel jpImages;
     private javax.swing.JPanel jpPlayGround;
+    private javax.swing.JTextField jtAttempts;
     // End of variables declaration//GEN-END:variables
 }

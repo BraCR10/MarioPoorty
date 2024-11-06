@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import poo.mariopoorty.minigames.BomberMario;
 import poo.mariopoorty.minigames.CatchTheCat;
+import poo.mariopoorty.minigames.GuessWho;
 import poo.mariopoorty.minigames.MemoryPath;
 import poo.mariopoorty.minigames.MiniGames;
 import poo.mariopoorty.minigames.WordSearch;
@@ -97,6 +98,8 @@ public class Player implements Runnable{
                     initCatchTheCat();
                     isMyTurn=true;
                     initBomberMario();
+                    isMyTurn=true;
+                    initGuessWho();
                     
                 }
 
@@ -126,6 +129,11 @@ public class Player implements Runnable{
     void initBomberMario(){
         //Test
         miniGame = new BomberMario(players, "Search Word","Play alone",1, miniGameScreen, board);
+        miniGame.playTurn();
+    }
+    void initGuessWho(){
+        //Test
+        miniGame = new GuessWho(players, "Search Word","Play alone",1, miniGameScreen, board);
         miniGame.playTurn();
     }
         
