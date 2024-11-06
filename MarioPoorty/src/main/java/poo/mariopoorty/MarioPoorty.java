@@ -7,6 +7,7 @@ package poo.mariopoorty;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import poo.mariopoorty.minigames.BomberMario;
+import poo.mariopoorty.minigames.GuessWho;
 import poo.mariopoorty.minigames.MiniGames;
 
 
@@ -21,13 +22,13 @@ public class MarioPoorty {
 
         new GameServer();
         
-        /*test
+        /*
         ArrayList<Player> p = new ArrayList<>();
         Player a = new Player();
         p.add(a);
         Board b = null;
         JFrame j=null;
-        MiniGames m = new BomberMario( p, "","",5, j,  b);
+        MiniGames m = new GuessWho( p, "","",5, j,  b);
         
         m.startGame();
         */
