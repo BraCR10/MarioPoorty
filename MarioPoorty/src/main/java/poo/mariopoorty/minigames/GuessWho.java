@@ -56,7 +56,7 @@ public class GuessWho extends MiniGames{
 
     @Override
     public void startGame() { 
-        //this.board.setVisible(false);
+        this.board.setVisible(false);
         gamePanel=new GuessWhoScreen(this);
         ((GuessWhoScreen)gamePanel).initPlayGround();
         ((GuessWhoScreen)gamePanel).getJtAttempts().setText("Blocks to be deleted: "+enableBlock);
