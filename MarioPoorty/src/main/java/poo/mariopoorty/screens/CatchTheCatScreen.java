@@ -5,6 +5,7 @@
 package poo.mariopoorty.screens;
 
 
+import poo.mariopoorty.minigames.SpriteAreaSelector;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

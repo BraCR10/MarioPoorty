@@ -43,7 +43,7 @@ public class MemoryPath extends MiniGames {
 
     @Override
     public void endGame() {
-        //this.board.setVisible(true);
+        this.board.setVisible(true);
         this.gamePanel.dispose();
     }
 

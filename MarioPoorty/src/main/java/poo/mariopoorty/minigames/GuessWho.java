@@ -65,7 +65,7 @@ public class GuessWho extends MiniGames{
 
     @Override
     public void endGame() {
-        this.board.setVisible(false);
+        this.board.setVisible(true);
         this.gamePanel.dispose();
     }
 

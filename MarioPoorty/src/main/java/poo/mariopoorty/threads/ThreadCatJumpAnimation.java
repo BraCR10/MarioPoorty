@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import poo.mariopoorty.screens.CatchTheCatScreen;
-import poo.mariopoorty.screens.SpriteCatPositionsEnum;
+import poo.mariopoorty.minigames.SpriteCatPositionsEnum;
 
 /**
  *
