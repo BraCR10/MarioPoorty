@@ -4,8 +4,6 @@
  */
 package poo.mariopoorty.minigames;
 
-import java.io.DataOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import poo.mariopoorty.Board;
