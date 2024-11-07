@@ -20,7 +20,7 @@ import poo.mariopoorty.minigames.LoadImage;
  *
  * @author Brian Ramirez
  */
-public class CollectCoinsScreen extends javax.swing.JFrame {
+public class CollectCoinsScreen extends JFrame implements IScreenMethods{
      private  int MATRIZSIZE=25;
 
      private CollectCoins settings;
@@ -32,7 +32,7 @@ public class CollectCoinsScreen extends javax.swing.JFrame {
      */
     public CollectCoinsScreen(CollectCoins settings) {
         initComponents();
-         setSize(1250, 650);
+        setSize(1250, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);        
         setTitle("Collect the Coins");
@@ -45,6 +45,7 @@ public class CollectCoinsScreen extends javax.swing.JFrame {
         initPlayGround();
         
     }
+     @Override
     public void initPlayGround() {
         jpPlayGround.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

@@ -29,7 +29,7 @@ import poo.mariopoorty.minigames.LoadImage;
  *
  * @author Brian Ramirez
  */
-public class CatchTheCatScreen extends JFrame {
+public class CatchTheCatScreen extends JFrame implements IScreenMethods{
     private static  int ROWS ;
     private static  int COLS ;
     private static final String RESOURCEPATH = "/CatchTheCatGame/";
@@ -101,7 +101,7 @@ public class CatchTheCatScreen extends JFrame {
         matrizSpacesLabels = new JLabel[ROWS][COLS];
 
         
-        putSpaces();
+        initPlayGround();
         initCharacter();
 
         
@@ -111,7 +111,8 @@ public class CatchTheCatScreen extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void putSpaces() {
+    @Override
+    public void initPlayGround() {
         jpPlayGround.setLayout(null);
         jpPlayGround.setPreferredSize(new Dimension(COLS * xOFFSET, ROWS * yOFFSET));
 

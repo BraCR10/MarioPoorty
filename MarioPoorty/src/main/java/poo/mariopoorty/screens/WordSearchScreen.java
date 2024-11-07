@@ -7,10 +7,10 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import poo.mariopoorty.minigames.WordSearch;
 
-public class WordSearchScreen extends JFrame {
+public class WordSearchScreen extends JFrame implements IScreenMethods{
     private int boardSize ;
     private JButton[][] matrizButtons;
-    private JPanel jpBoard;
+    private JPanel jpPlayGround;
     private JPanel screenPanel;
     private char[][] boardChars;
     private String word1,word2,word3,word4;
@@ -21,16 +21,13 @@ public class WordSearchScreen extends JFrame {
          
     }
 
-    private void initComponents() {
-
-        setTitle("Word Search");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    @Override
+    public void initPlayGround() {
         screenPanel = new JPanel();
-        jpBoard= new JPanel();
-        screenPanel.add(jpBoard);
+        jpPlayGround= new JPanel();
+        screenPanel.add(jpPlayGround);
         matrizButtons = new JButton[boardSize][boardSize];
-        jpBoard.setLayout(new GridLayout(boardSize, boardSize)); 
+        jpPlayGround.setLayout(new GridLayout(boardSize, boardSize)); 
 
 
         for (int i = 0; i < boardSize; i++) {
@@ -40,13 +37,20 @@ public class WordSearchScreen extends JFrame {
                 matrizButtons[i][j].addActionListener(evt -> charButtonActionPerformed(evt));
                 matrizButtons[i][j].setBackground(Color.WHITE);
                 matrizButtons[i][j].setPreferredSize(new Dimension(10, 10)); 
-                jpBoard.add(matrizButtons[i][j]);
+                jpPlayGround.add(matrizButtons[i][j]);
             }
         }
 
 
-        add(jpBoard, BorderLayout.CENTER);
+        add(jpPlayGround, BorderLayout.CENTER);
+    }
+    
+    private void initComponents() {
 
+        setTitle("Word Search");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        
         // Left panel 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); 
@@ -102,6 +106,7 @@ public class WordSearchScreen extends JFrame {
     }
 
     public void drawScreen() {
+        initPlayGround();
         initComponents(); 
     }
 

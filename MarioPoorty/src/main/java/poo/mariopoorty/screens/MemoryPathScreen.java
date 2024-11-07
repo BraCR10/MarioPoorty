@@ -19,7 +19,7 @@ import poo.mariopoorty.threads.ThreadCharacterMemoryPathMovement;
  *
  * @author Brian Ramirez
  */
-public class MemoryPathScreen extends javax.swing.JFrame {
+public class MemoryPathScreen extends JFrame implements IScreenMethods{
 
     private static final int ROWS = 6;
     private static final int COLS = 3;
@@ -58,7 +58,7 @@ public class MemoryPathScreen extends javax.swing.JFrame {
         this.isArrivedFlag=false;
         this.settings=memoryPathSettings;
         
-        putCells();
+        initPlayGround();
         putTarget();
         defaultSettings();
         
@@ -177,179 +177,178 @@ public class MemoryPathScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jtAttempsActionPerformed
 
 
-private void putCells() {
-    this.jpPlayGround.setLayout(new GridLayout(COLS, ROWS)); 
+    @Override
+    public void initPlayGround() {
+        this.jpPlayGround.setLayout(new GridLayout(COLS, ROWS)); 
 
-    Border leftRightBorder = BorderFactory.createMatteBorder(0, 5, 0, 1, Color.red);
-    
-    for (int j = 0; j < COLS; j++) { 
+        Border leftRightBorder = BorderFactory.createMatteBorder(0, 5, 0, 1, Color.red);
+
+        for (int j = 0; j < COLS; j++) { 
+            for (int i = 0; i < ROWS; i++) {
+                this.cellsLabels[i][j] = new JLabel(misteryBox);
+                this.cellsLabels[i][j].setVisible(true);
+                this.cellsLabels[i][j].setBorder(leftRightBorder);
+
+                this.cellsLabels[i][j].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent evt) {
+                        cellMouseClicked(evt);
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent evt) {
+                        cellMouseEntered(evt);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent evt) {
+                        cellMouseExited(evt);
+                    }
+                });
+                this.currentRow=-1;
+                this.jpPlayGround.add(cellsLabels[i][j]);
+            }
+        }
+
+        jpPlayGround.revalidate(); 
+        jpPlayGround.repaint(); 
+    }
+
+    private void putTarget() {
+        this.jpTarget.setLayout(null); 
+        JLabel targetLabel = new JLabel(this.targetImage);
+        targetLabel.setBounds(0, 0, jpTarget.getWidth(), jpTarget.getHeight()); 
+        jpTarget.add(targetLabel); 
+        this.jpTarget.revalidate(); 
+        this.jpTarget.repaint(); 
+    }
+
+    public void defaultSettings(){
+        putCharacter(jpExit, (this.jpExit.getWidth() - character.getPreferredSize().width) / 2,(this.jpExit.getHeight()) / 3);
+
+        //To put images again
         for (int i = 0; i < ROWS; i++) {
-            this.cellsLabels[i][j] = new JLabel(misteryBox);
-            this.cellsLabels[i][j].setVisible(true);
-            this.cellsLabels[i][j].setBorder(leftRightBorder);
-            
-            this.cellsLabels[i][j].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent evt) {
-                    cellMouseClicked(evt);
-                }
-                
-                @Override
-                public void mouseEntered(MouseEvent evt) {
-                    cellMouseEntered(evt);
-                }
-
-                @Override
-                public void mouseExited(MouseEvent evt) {
-                    cellMouseExited(evt);
-                }
-            });
-            this.currentRow=-1;
-            this.jpPlayGround.add(cellsLabels[i][j]);
+            for (int j = 0; j < COLS; j++) {
+                this.getCellsLabels()[i][j].setIcon(this.getMisteryBox());
+            }
         }
+
+        this.setCurrentRow(-1);
     }
 
-    jpPlayGround.revalidate(); 
-    jpPlayGround.repaint(); 
-}
+    public void putCharacter(JPanel jp, int x, int y){
+        jp.setLayout(null);
+        jp.add(character);
+        this.character.setBounds(x, y, character.getPreferredSize().width, character.getPreferredSize().height);
+        jp.revalidate();
+        jp.repaint();
 
-private void putTarget() {
-    this.jpTarget.setLayout(null); 
-    JLabel targetLabel = new JLabel(this.targetImage);
-    targetLabel.setBounds(0, 0, jpTarget.getWidth(), jpTarget.getHeight()); 
-    jpTarget.add(targetLabel); 
-    this.jpTarget.revalidate(); 
-    this.jpTarget.repaint(); 
-}
-
-public void defaultSettings(){
-    putCharacter(jpExit, (this.jpExit.getWidth() - character.getPreferredSize().width) / 2,(this.jpExit.getHeight()) / 3);
-
-    //To put images again
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            this.getCellsLabels()[i][j].setIcon(this.getMisteryBox());
-        }
     }
 
-    this.setCurrentRow(-1);
+    private void cellMouseClicked(MouseEvent evt) { 
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (evt.getSource().equals(cellsLabels[i][j])
+                    && currentRow+1==i) {
 
+                    jpPlayGround.setLayout(null);
+                    jpExit.setLayout(null);
 
-}
+                   if (character.getParent() == jpExit)jpExit.remove(character);
+                   jpPlayGround.add(character);
 
-public void putCharacter(JPanel jp, int x, int y){
-    jp.setLayout(null);
-    jp.add(character);
-    this.character.setBounds(x, y, character.getPreferredSize().width, character.getPreferredSize().height);
-    jp.revalidate();
-    jp.repaint();
+                   moveCharacter(cellsLabels[i][j],settings.getMatrizPathSelected()[i][j]);
+                   jpPlayGround.revalidate();
+                   jpPlayGround.repaint();
+                   jpExit.revalidate();
+                   jpExit.repaint();
+                   jpPlayGround.setComponentZOrder(character, 0);
+                   currentRow++;
 
-}
-
-private void cellMouseClicked(MouseEvent evt) { 
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            if (evt.getSource().equals(cellsLabels[i][j])
-                && currentRow+1==i) {
-                    
-                jpPlayGround.setLayout(null);
-                jpExit.setLayout(null);
-
-               if (character.getParent() == jpExit)jpExit.remove(character);
-               jpPlayGround.add(character);
-
-               moveCharacter(cellsLabels[i][j],settings.getMatrizPathSelected()[i][j]);
-               jpPlayGround.revalidate();
-               jpPlayGround.repaint();
-               jpExit.revalidate();
-               jpExit.repaint();
-               jpPlayGround.setComponentZOrder(character, 0);
-               currentRow++;
-               
+                }
             }
         }
     }
-}
 
-private void cellMouseEntered(java.awt.event.MouseEvent evt) { 
-        if( ((JLabel) evt.getSource()).getIcon()!=null ){
-            for (int i = 0; i < ROWS; i++) {
-                for (int j = 0; j < COLS; j++){
-                    if(cellsLabels[i][j].equals(((JLabel) evt.getSource()))){
-                        if(i-1==currentRow)
-                            ((JLabel) evt.getSource()).setIcon(this.misteryBoxDimmed);
-                        else
-                            ((JLabel) evt.getSource()).setIcon(this.misteryBoxNotAllowed); 
+    private void cellMouseEntered(java.awt.event.MouseEvent evt) { 
+            if( ((JLabel) evt.getSource()).getIcon()!=null ){
+                for (int i = 0; i < ROWS; i++) {
+                    for (int j = 0; j < COLS; j++){
+                        if(cellsLabels[i][j].equals(((JLabel) evt.getSource()))){
+                            if(i-1==currentRow)
+                                ((JLabel) evt.getSource()).setIcon(this.misteryBoxDimmed);
+                            else
+                                ((JLabel) evt.getSource()).setIcon(this.misteryBoxNotAllowed); 
+                        }
                     }
                 }
+
             }
-            
-        }
-    } 
+        } 
 
-private void cellMouseExited(java.awt.event.MouseEvent evt) { 
-        if( ((JLabel) evt.getSource()).getIcon()!=null){
+    private void cellMouseExited(java.awt.event.MouseEvent evt) { 
+            if( ((JLabel) evt.getSource()).getIcon()!=null){
 
-            ((JLabel) evt.getSource()).setIcon(this.misteryBox);
-        }
-    } 
-     
-      
+                ((JLabel) evt.getSource()).setIcon(this.misteryBox);
+            }
+        } 
 
 
 
 
-public JLabel[][] getCellsLabels() {
-    return cellsLabels;
-}
 
-public void setCellsLabels(JLabel[][] cellsLabels) {
-    this.cellsLabels = cellsLabels;
-}
 
-public JLabel getCharacter() {
-    return character;
-}
+    public JLabel[][] getCellsLabels() {
+        return cellsLabels;
+    }
 
-public void setCharacter(JLabel character) {
-    this.character = character;
-}
+    public void setCellsLabels(JLabel[][] cellsLabels) {
+        this.cellsLabels = cellsLabels;
+    }
 
-public int getCurrentRow() {
-    return currentRow;
-}
+    public JLabel getCharacter() {
+        return character;
+    }
 
-public void setCurrentRow(int currentRow) {
-    this.currentRow = currentRow;
-}
+    public void setCharacter(JLabel character) {
+        this.character = character;
+    }
 
-public JPanel getJpExit() {
-    return jpExit;
-}
+    public int getCurrentRow() {
+        return currentRow;
+    }
 
-public void setJpExit(JPanel jpExit) {
-    this.jpExit = jpExit;
-}
+    public void setCurrentRow(int currentRow) {
+        this.currentRow = currentRow;
+    }
 
-public JPanel getJpPlayGround() {
-    return jpPlayGround;
-}
+    public JPanel getJpExit() {
+        return jpExit;
+    }
 
-public void setJpPlayGround(JPanel jpPlayGround) {
-    this.jpPlayGround = jpPlayGround;
-}
+    public void setJpExit(JPanel jpExit) {
+        this.jpExit = jpExit;
+    }
 
-public JPanel getJpTarget() {
-    return jpTarget;
-}
+    public JPanel getJpPlayGround() {
+        return jpPlayGround;
+    }
 
-public void setJpTarget(JPanel jpTarget) {
-    this.jpTarget = jpTarget;
-}
+    public void setJpPlayGround(JPanel jpPlayGround) {
+        this.jpPlayGround = jpPlayGround;
+    }
 
-public ImageIcon getMisteryBox() {
-    return misteryBox;
-}
+    public JPanel getJpTarget() {
+        return jpTarget;
+    }
+
+    public void setJpTarget(JPanel jpTarget) {
+        this.jpTarget = jpTarget;
+    }
+
+    public ImageIcon getMisteryBox() {
+        return misteryBox;
+    }
 
     public JTextField getJtAttemps() {
         return jtAttemps;

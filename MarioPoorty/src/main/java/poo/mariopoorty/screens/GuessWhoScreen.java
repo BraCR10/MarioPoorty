@@ -21,7 +21,7 @@ import poo.mariopoorty.minigames.LoadImage;
  *
  * @author Brian Ramirez
  */
-public class GuessWhoScreen extends javax.swing.JFrame {
+public class GuessWhoScreen extends JFrame implements IScreenMethods{
      private  int MATRIZSIZE=10;
      private static final String RESOURCEPATH = "/GuessWho/";
      private ImageIcon[][] imageSegments;
@@ -50,6 +50,7 @@ public class GuessWhoScreen extends javax.swing.JFrame {
 
     }
 
+     @Override
     public void initPlayGround() {
         jpPlayGround.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

@@ -11,7 +11,7 @@ import javax.swing.*;
 import poo.mariopoorty.minigames.BomberMario;
 import poo.mariopoorty.minigames.LoadImage;
 
-public class BomberMarioScreen extends JFrame {
+public class BomberMarioScreen extends JFrame implements IScreenMethods{
     private int boardSize ;
     private JLabel[][] matrizMisteryBox;
     private JPanel jpBoard;
@@ -29,7 +29,8 @@ public class BomberMarioScreen extends JFrame {
          this.settings=settings;
     }
 
-    private void initComponents() {
+    @Override
+    public void initPlayGround() {
         setTitle("Bomber Mario");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -139,7 +140,7 @@ public class BomberMarioScreen extends JFrame {
     }
 
     public void drawScreen() {
-        initComponents(); 
+        initPlayGround(); 
     }
     public void labelsBombsEvents(JLabel j) {
         j.addMouseListener(new MouseAdapter() {
