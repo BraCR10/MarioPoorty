@@ -14,8 +14,9 @@ package poo.mariopoorty;
 public class MarioPoorty {
 
     public static void main(String[] args) {
-
-        new GameServer();
+        new ChatServer();
+        
+        //new GameServer();
         
         /*
         ArrayList<Player> p = new ArrayList<>();
