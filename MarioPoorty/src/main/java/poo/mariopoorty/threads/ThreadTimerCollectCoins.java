@@ -8,9 +8,7 @@ import java.awt.Color;
 import static java.lang.Thread.sleep;
 import java.util.Random;
 import javax.swing.JFrame;
-import poo.mariopoorty.minigames.WordSearch;
 import poo.mariopoorty.screens.CollectCoinsScreen;
-import poo.mariopoorty.screens.WordSearchScreen;
 
 /**
  *

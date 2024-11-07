@@ -4,12 +4,6 @@
 
 package poo.mariopoorty;
 
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import poo.mariopoorty.minigames.BomberMario;
-import poo.mariopoorty.minigames.CollectCoins;
-import poo.mariopoorty.minigames.GuessWho;
-import poo.mariopoorty.minigames.MiniGames;
 
 
 /**

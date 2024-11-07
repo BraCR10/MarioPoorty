@@ -24,7 +24,6 @@ public class ReadFiles {
             ReadFiles.class.getResourceAsStream("/poo/mariopoorty/files/" + filePath)))
             ) {
             String line;
-            // Leer líneas del archivo
             while ((line = reader.readLine()) != null) {
                 wordsList.add(line);
             }

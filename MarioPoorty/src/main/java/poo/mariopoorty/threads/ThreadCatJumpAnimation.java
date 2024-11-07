@@ -22,7 +22,7 @@ public class ThreadCatJumpAnimation extends Thread {
     private int currentX, currentY; // Current position of the character
     private CatchTheCatScreen screen;
 
-    // Constructor
+
     public ThreadCatJumpAnimation( int targetX, int targetY, CatchTheCatScreen screen, int currentX, int currentY) {
         this.targetX = targetX;
         this.targetY = targetY;
@@ -37,7 +37,6 @@ public class ThreadCatJumpAnimation extends Thread {
     @Override
     public void run() {
     
-    // Now animate the jump
         while (isRunning) {
             screen.getSettings().setEnableCatMovement(false);
             try {
@@ -72,7 +71,6 @@ public class ThreadCatJumpAnimation extends Thread {
             
             while (isPaused
                     ) {
-                // Pause the animation if needed
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {

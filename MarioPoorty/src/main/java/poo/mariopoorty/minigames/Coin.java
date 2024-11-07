@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
  *
  * @author Brian Ramirez
  */
+//This is use to the collect coins mini game
 public class Coin {
     public ImageIcon image;
     public boolean type;

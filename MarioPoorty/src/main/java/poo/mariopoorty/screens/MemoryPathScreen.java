@@ -6,7 +6,6 @@ package poo.mariopoorty.screens;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import poo.mariopoorty.minigames.LoadImage;

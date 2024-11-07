@@ -14,8 +14,6 @@ public class WordSearchScreen extends JFrame {
     private JPanel screenPanel;
     private char[][] boardChars;
     private String word1,word2,word3,word4;
-
-
     //TIMMER
     JTextField timerLabel;
     

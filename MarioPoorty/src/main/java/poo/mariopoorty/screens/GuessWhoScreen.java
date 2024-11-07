@@ -6,12 +6,9 @@ package poo.mariopoorty.screens;
 
 
 import java.awt.Dimension;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
