@@ -31,7 +31,7 @@ public class ThreadServerChat extends Thread{
     public ThreadServerChat(Socket socket, ChatServer server) {
         this.socket = socket;
         this.server = server;
-        
+        isRunning=true;
         try {
             output=new ObjectOutputStream(socket.getOutputStream());
             inputData= new DataInputStream(socket.getInputStream());
