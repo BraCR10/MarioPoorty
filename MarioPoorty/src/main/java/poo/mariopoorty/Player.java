@@ -114,33 +114,50 @@ public class Player implements Runnable{
     
     void initSearchWord(){
         //Test
-        miniGame = new WordSearch(players,"Search Word","Play alone",1,miniGameScreen,board);
+        String description ="The player will have 2 minutes to find the 4 " +
+        "words and win. If the player of the turn wins, he can roll the dice in his next turn, "
+        + "otherwise he plays the same box again.";
+        miniGame = new WordSearch(players,"Search Word",description,1,miniGameScreen,board);
         miniGame.playTurn();
     }
     
     void initMemoryPath(){
         //Test
-        miniGame = new MemoryPath(players, "Search Word","Play alone",1, miniGameScreen, board);
+        String description="The player must complete the path in 3 attempts without making a mistake. "
+                + "If you reach the end of the road, you win.If in one of the attempts you do not get to the goal, "
+                + "you must return to the beginning of the game. If the player in the turn wins, he can roll the dice on his next turn, "
+                + "otherwise he plays the same square again.";
+        miniGame = new MemoryPath(players, "Memory Path",description,1, miniGameScreen, board);
         miniGame.playTurn();
     }
     void initCatchTheCat(){
         //Test
-        miniGame = new CatchTheCat(players, "Search Word","Play alone",1, miniGameScreen, board);
+        String description="The game involves locking in the cat, preventing that this can move." +
+        "You win if you lock the cat, you lose if the cat escapes by the edges.";
+        miniGame = new CatchTheCat(players, "Catch The Cat",description,1, miniGameScreen, board);
         miniGame.playTurn();
     }
     void initBomberMario(){
         //Test
-        miniGame = new BomberMario(players, "Search Word","Play alone",1, miniGameScreen, board);
+        String description=" A treasure will be hidden that will occupy 4 boxes. The player has 7 bombs to find the treasure.";
+        miniGame = new BomberMario(players, "Bomber Mario",description,1, miniGameScreen, board);
         miniGame.playTurn();
     }
     void initGuessWho(){
         //Test
-        miniGame = new GuessWho(players, "Search Word","Play alone",1, miniGameScreen, board);
+        String description="The game will give the player between 4 and 8 random cells to discover the image. "
+                + "After discovering all the cells you have choice, you must choose which is the hidden character. "
+                + "If you hit it wins.";
+        miniGame = new GuessWho(players, "Guess who",description,1, miniGameScreen, board);
         miniGame.playTurn();
     }
     void initCollectCoins(){
         //Test
-        miniGame = new CollectCoins(players, "Search Word","Play alone",1, miniGameScreen, board);
+        String description="The coins, both good and bad, each have a value between +-1 and +-10 (random). "
+                + "The good coins have a positive value, the bad coins a negative one."
+                + " The player will have 30 seconds, 45 seconds or 60 seconds (random) to select as many squares as he wants and can. Each cell will have a coin, "
+                + "at the end all coins of the collection are added up and if the value is positive, the game wins.";
+        miniGame = new CollectCoins(players, "Collect Coins",description,1, miniGameScreen, board);
         miniGame.playTurn();
     }
         
