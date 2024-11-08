@@ -11,5 +11,4 @@ package poo.mariopoorty.screens;
 public interface IScreenMethods {
     public void initPlayGround();
     public void loadImages();
-    
 }

@@ -95,9 +95,7 @@ public class CatchTheCatScreen extends JFrame implements IScreenMethods{
 
         
         this.settings = settings;
-        spaceImage = LoadImage.loadImageAdjusted(RESOURCEPATH + "base.png", xOFFSET, yOFFSET);
-        spaceImageDimmed = LoadImage.loadImageAdjusted(RESOURCEPATH + "baseDimmed.png", xOFFSET, yOFFSET);
-        characterImage = new SpriteAreaSelector(RESOURCEPATH + "cat.png");
+        loadImages();
         matrizSpacesLabels = new JLabel[ROWS][COLS];
 
         
@@ -109,6 +107,13 @@ public class CatchTheCatScreen extends JFrame implements IScreenMethods{
 
        
         setLocationRelativeTo(null);
+    }
+
+    @Override
+    public void loadImages() {
+        spaceImage = LoadImage.loadImageAdjusted(RESOURCEPATH + "base.png", xOFFSET, yOFFSET);
+        spaceImageDimmed = LoadImage.loadImageAdjusted(RESOURCEPATH + "baseDimmed.png", xOFFSET, yOFFSET);
+        characterImage = new SpriteAreaSelector(RESOURCEPATH + "cat.png");
     }
 
     @Override

@@ -117,14 +117,19 @@ public class WordSearchScreen extends JFrame implements IScreenMethods{
     }
     
     private void checkWordAction() {
-    for (int i = 0; i < boardSize; i++) {
-        for (int j = 0; j < boardSize; j++) {
-            matrizButtons[i][j].setBackground(Color.WHITE);
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                matrizButtons[i][j].setBackground(Color.WHITE);
+            }
         }
-    }
-    WordSearch.checkSeletedWord(word1, word2, word3, word4);   
+        WordSearch.checkSeletedWord(word1, word2, word3, word4);   
     
-}
+    }
+
+    @Override
+    public void loadImages() {
+        throw new UnsupportedOperationException("Not images in this game."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     public int getBoardSize() {
         return boardSize;

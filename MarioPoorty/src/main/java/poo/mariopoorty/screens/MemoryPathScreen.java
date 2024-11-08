@@ -26,7 +26,7 @@ public class MemoryPathScreen extends JFrame implements IScreenMethods{
 
 
     private JLabel[][] cellsLabels = new JLabel[ROWS][COLS];
-    private final ImageIcon misteryBox, misteryBoxDimmed, misteryBoxNotAllowed, misteryBoxIncorrect, targetImage, characterImage;
+    private  ImageIcon misteryBox, misteryBoxDimmed, misteryBoxNotAllowed, misteryBoxIncorrect, targetImage, characterImage;
     private static final String RESOURCEPATH = "/MemoryPathGame/";
 
     private JLabel character;
@@ -48,12 +48,7 @@ public class MemoryPathScreen extends JFrame implements IScreenMethods{
         this.jpExit.setPreferredSize(new Dimension(100, this.getHeight())); 
         this.jpTarget.setPreferredSize(new Dimension(100, this.getHeight())); 
         
-        misteryBox = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBox.jpg",150,150);
-        misteryBoxDimmed = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxDimmed.jpg",150,150);
-        misteryBoxIncorrect = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxNotAllowed.jpg",150,150);
-        misteryBoxNotAllowed = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxIncorrect.jpg",150,150);
-        targetImage = LoadImage.loadImageAdjusted(RESOURCEPATH+"target.jpg",jpTarget.getWidth(),jpTarget.getHeight());
-        characterImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"character.png",60,60);
+        loadImages();
         character = new JLabel(characterImage);
         this.isArrivedFlag=false;
         this.settings=memoryPathSettings;
@@ -69,6 +64,16 @@ public class MemoryPathScreen extends JFrame implements IScreenMethods{
         this.setLocationRelativeTo(null); 
         this.setResizable(false);
         
+    }
+
+    @Override
+    public void loadImages() {
+        misteryBox = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBox.jpg",150,150);
+        misteryBoxDimmed = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxDimmed.jpg",150,150);
+        misteryBoxIncorrect = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxNotAllowed.jpg",150,150);
+        misteryBoxNotAllowed = LoadImage.loadImageAdjusted(RESOURCEPATH+"misteryBoxIncorrect.jpg",150,150);
+        targetImage = LoadImage.loadImageAdjusted(RESOURCEPATH+"target.jpg",jpTarget.getWidth(),jpTarget.getHeight());
+        characterImage=LoadImage.loadImageAdjusted(RESOURCEPATH+"character.png",60,60);
     }
 
     /**

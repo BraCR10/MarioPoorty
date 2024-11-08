@@ -40,11 +40,18 @@ public class CollectCoinsScreen extends JFrame implements IScreenMethods{
         this.settings=settings;
         coins=settings.getCoins();
         coinsLabel=new ArrayList<>();
-        badCoinLabel.setIcon(LoadImage.loadImageAdjusted(settings.getRESOURCEPATH()+"bad_coin.png", 50, 50));
-        GoodCoinLabel.setIcon(LoadImage.loadImageAdjusted(settings.getRESOURCEPATH()+"coin.png", 50, 50));
+        loadImages();
         initPlayGround();
         
     }
+
+    @Override
+    public void loadImages() {
+         badCoinLabel.setIcon(LoadImage.loadImageAdjusted(settings.getRESOURCEPATH()+"bad_coin.png", 50, 50));
+        GoodCoinLabel.setIcon(LoadImage.loadImageAdjusted(settings.getRESOURCEPATH()+"coin.png", 50, 50));
+    }
+    
+    
      @Override
     public void initPlayGround() {
         jpPlayGround.setLayout(new GridBagLayout());

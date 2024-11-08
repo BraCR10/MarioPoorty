@@ -38,8 +38,8 @@ public class BomberMarioScreen extends JFrame implements IScreenMethods{
         jpBoard = new JPanel(new GridLayout(boardSize, boardSize));
         matrizMisteryBox = new JLabel[boardSize][boardSize];
 
-        int bombSize = 90;
-        loadImages(bombSize);
+        
+        loadImages();
 
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -66,7 +66,9 @@ public class BomberMarioScreen extends JFrame implements IScreenMethods{
         enableExplotionFlag=true;
     }
 
-    private void loadImages(int bombSize) {
+    @Override
+    public void loadImages() {
+        int bombSize = 90;
         misteryBox = LoadImage.loadImageAdjusted(RESOURCEPATH + "misteryBox.jpg", boardSize + 10, boardSize + 10);
         misteryBoxEmpty = LoadImage.loadImageAdjusted(RESOURCEPATH + "misteryBoxEmpty.jpg", boardSize + 10, boardSize + 10);
         bomb_simple = LoadImage.loadImageAdjusted(RESOURCEPATH + "simple_bomb.png", bombSize, bombSize);

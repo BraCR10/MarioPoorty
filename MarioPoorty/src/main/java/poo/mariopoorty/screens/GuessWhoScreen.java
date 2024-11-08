@@ -85,6 +85,7 @@ public class GuessWhoScreen extends JFrame implements IScreenMethods{
 
         add(jpPlayGround);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -635,8 +636,6 @@ public class GuessWhoScreen extends JFrame implements IScreenMethods{
 
     private void imageLabel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageLabel6MouseExited
         // TODO add your handling code here:
-        int width=100;
-        int height=100;
         ImageIcon image = images.get(5);
         ((JLabel)evt.getSource()).setIcon(image);
     }//GEN-LAST:event_imageLabel6MouseExited
@@ -809,7 +808,8 @@ public class GuessWhoScreen extends JFrame implements IScreenMethods{
         settings.checkSelectedImage(evt);
     }//GEN-LAST:event_imageLabel15MouseClicked
 
-    private void loadImages(){
+     @Override
+    public void loadImages(){
         ImageIcon image;
         int width=100;
         int height=100;

@@ -29,8 +29,16 @@ public class MemoryPath extends MiniGames {
 
     private void configurePathMatrix() {
         for (int i = 0; i < ROWS; i++) {
-            matrizPathSelected[i][randomNumber.nextInt(3)] = true;
+            matrizPathSelected[i][randomNumber.nextInt(COLS)] = true;
         }
+        //to show solution
+        /*
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+              System.out.println("|"+matrizPathSelected[i][j]+"|");  
+            }
+            System.out.println(" ");     
+        }*/
     }
 
 
