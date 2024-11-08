@@ -35,7 +35,7 @@ public class BomberMario extends MiniGames{
         this.boardDisplaySize=randomNumber.nextInt(enableSizes.length);
         this.boardDisplaySize=enableSizes[boardDisplaySize];
         
-        randomChestPositions=new Point[4];
+        randomChestPositions=new Point[4];//problem the program is working with swapped points, must be fixed, y is x and x is y
         chooseRandomPosition();
         bombsCounter=7;
         chestFoundPartCounter=1;
