@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package poo.mariopoorty;
+package com.mycompany.proyect2;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,7 +10,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import poo.mariopoorty.threads.ThreadPlayerChat;
+import threads.ThreadPlayerChat;
 
 /**
  *
@@ -50,7 +47,7 @@ public class playerChat {
     public  void send(){
         try {
             String msg=scanner.next();
-            this.output.writeObject(new Message(Name,msg ));
+            this.output.writeObject(new Message(Name,msg));
         } catch (IOException ex) {
             Logger.getLogger(playerChat.class.getName()).log(Level.SEVERE, null, ex);
         }

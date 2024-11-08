@@ -28,7 +28,9 @@ public class BomberMarioScreen extends JFrame implements IScreenMethods{
     public BomberMarioScreen(BomberMario settings) {
          this.settings=settings;
     }
-
+    public void Win(){
+        this.settings.players.get(0).Condition = "Roll";
+    }
     @Override
     public void initPlayGround() {
         setTitle("Bomber Mario");

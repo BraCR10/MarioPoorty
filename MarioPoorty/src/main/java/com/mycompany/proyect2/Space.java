@@ -1,13 +1,9 @@
- package poo.mariopoorty;
+package com.mycompany.proyect2;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
+
 
 public class Space {
     int positionBoard;
@@ -66,7 +62,7 @@ public class Space {
             }
             
             else if (22 <= i && i <= 27){
-                this.posX = 100 + (76 * (i - 22 + 1));
+                this.posX = 100 + (76 * (27 - i + 1));
                 this.posY = 557;
 
             }
@@ -74,9 +70,8 @@ public class Space {
     }
     
     private void setType(String type){
-        
         this.panel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Spaces/"+type+".png")));
-    
+
     }
     
 }
