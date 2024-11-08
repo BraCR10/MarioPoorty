@@ -14,8 +14,8 @@ import poo.mariopoorty.screens.MemoryPathScreen;
  */
 
 public class ThreadCharacterMemoryPathMovement extends Thread {
-    private volatile boolean isRunning;
-    private volatile boolean isPaused;
+    private  boolean isRunning;
+    private  boolean isPaused;
     private  MemoryPathScreen screen;
     private final int xLimit;
     private final int yLimit;
