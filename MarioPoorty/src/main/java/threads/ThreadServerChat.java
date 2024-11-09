@@ -4,7 +4,7 @@
  */
 package threads;
 
-import com.mycompany.proyect2.ChatServer;
+import com.mycompany.proyect2.GameServer;
 import com.mycompany.proyect2.Message;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,14 +22,14 @@ import java.util.logging.Logger;
  */
 public class ThreadServerChat extends Thread{
     public Socket socket;
-    private ChatServer server;
+    private GameServer server;
     public ObjectOutputStream output;
     public DataInputStream inputData;
     public ObjectInputStream input;
     String playerName;
     private  boolean  isRunning;
 
-    public ThreadServerChat(Socket socket, ChatServer server) {
+    public ThreadServerChat(Socket socket, GameServer server) {
         this.socket = socket;
         this.server = server;
         isRunning=true;
@@ -47,8 +47,6 @@ public class ThreadServerChat extends Thread{
     public void run() {
         Message msg;
         try {
-            playerName= inputData.readUTF();
-            System.out.println(playerName+" was connected!");
             
             // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         } catch (IOException ex) {
@@ -59,7 +57,6 @@ public class ThreadServerChat extends Thread{
             try {
                 
                 msg = (Message) input.readObject();
-                System.out.println(msg.toString());
                 server.broadCoast(msg);
                 
             } catch (IOException ex) {

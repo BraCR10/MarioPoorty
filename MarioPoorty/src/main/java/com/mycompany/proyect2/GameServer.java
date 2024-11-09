@@ -10,6 +10,10 @@ import java.util.Comparator;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.StringJoiner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import threads.ConnectionThreadChat;
+import threads.ThreadServerChat;
 
 public class GameServer {
     private ServerSocket serverSocket;
@@ -20,12 +24,29 @@ public class GameServer {
     private String[] types = new String[28];
     private boolean [] fixedPositions = new boolean[28];
     
+    //Chat variables
+    private final int CHAT_PORT = 3006;
+    public ServerSocket serverSocketChat;
+    public ArrayList<ThreadServerChat> players;
+    ConnectionThreadChat threadConnectionsListener;
+    
     public GameServer() {
         
         this.TypesList();
         
+        //To chat service
+       try {
+            serverSocketChat = new ServerSocket(CHAT_PORT);//1025-65535
+            players=new ArrayList<>();
+            threadConnectionsListener=new ConnectionThreadChat (this);
+            threadConnectionsListener.start();
+            System.out.println("Ready to chat");
+        } catch (IOException ex) {
+            Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       //-------------------------------------------------------
         try {
-            serverSocket = new ServerSocket(122); 
+            serverSocket = new ServerSocket(123); 
             
             
             SearchPlayers();
@@ -42,6 +63,9 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        
+
     }
     
     // [Star the GAME] -------------------------------------------------------------------------
@@ -262,8 +286,19 @@ public class GameServer {
         System.out.println("Error reading player coordinates: " + e.getMessage());
         }
     }
-
+    //BroadCoast funtion for chat
+     public void broadCoast(Message msj){
+        
+        for (ThreadServerChat player : players) {
+            try {
+                player.output.writeObject(msj);
+            } catch (IOException ex) {
+                Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     
+    }
+     
     public static void main(String[] args) {
         new GameServer();
     }

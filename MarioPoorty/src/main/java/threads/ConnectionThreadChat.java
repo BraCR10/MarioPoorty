@@ -1,7 +1,8 @@
 package threads;
 
 
-import com.mycompany.proyect2.ChatServer;
+
+import com.mycompany.proyect2.GameServer;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -14,10 +15,10 @@ import java.util.logging.Logger;
  */
 public class ConnectionThreadChat extends Thread{
     private boolean  isRunning=true;
-    ChatServer server;
+    GameServer server;
 
 
-    public ConnectionThreadChat(ChatServer server) {
+    public ConnectionThreadChat(GameServer server) {
         this.server = server;
     }
     
@@ -27,7 +28,7 @@ public class ConnectionThreadChat extends Thread{
             try {
                 //server.pantalla.write("waiting players");
                 System.out.println("Waiting for players");
-                Socket socket = server.server.accept();
+                Socket socket = server.serverSocketChat.accept();
                 ThreadServerChat t = new ThreadServerChat(socket, server);
                 t.start();
                 server.players.add(t);

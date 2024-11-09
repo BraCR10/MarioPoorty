@@ -4,6 +4,7 @@ import BoardANDPawns.DiceRoller;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -18,6 +19,7 @@ import minigames.GuessWho;
 import minigames.MemoryPath;
 import minigames.MiniGames;
 import minigames.WordSearch;
+import threads.ThreadPlayerChat;
 
 public class Player implements Runnable{
     public Socket socket;
@@ -39,12 +41,25 @@ public class Player implements Runnable{
     public JLabel Pawn; 
     private Thread thread;
     public Scanner sc = new Scanner(System.in);
-   
+    
+    //For chat services
+    Socket socketPlayerChat;
+    private final int CHAT_PORT = 3006;
+    public ObjectOutputStream output;
+    public DataOutputStream outputData;
+    
     
     public Player(Socket socket, DataInputStream in, DataOutputStream out){
         this.socket = socket;
         this.in = in;
         this.out = out;
+        
+        //for chat
+        try {
+            connect();
+        } catch (IOException ex) {
+            
+        }
     }
     
     
@@ -52,7 +67,7 @@ public class Player implements Runnable{
     public Player() throws InterruptedException {
         try {
             // Set Sokect, input & output
-            this.socket = new Socket("localhost", 122);
+            this.socket = new Socket("localhost", 123);
             this.out = new DataOutputStream(socket.getOutputStream());
             this.in = new DataInputStream(socket.getInputStream());
             players.add(this);
@@ -67,10 +82,16 @@ public class Player implements Runnable{
             
             this.thread = new Thread(this, "Game");
             this.thread.start();
+            
+             //For chat
+            connect();
         
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+       
+      
     }
     
     private String[] ReadGameBoard(){
@@ -136,8 +157,18 @@ public class Player implements Runnable{
       
     }
     // -------------------------------------------------------------------------
- 
+    //For chat services
+    public void connect() throws IOException{
+        socketPlayerChat = new Socket("localhost", CHAT_PORT);
+        output=new ObjectOutputStream(socketPlayerChat.getOutputStream());
+        outputData=new DataOutputStream(socketPlayerChat.getOutputStream());
+        
+        ThreadPlayerChat t = new ThreadPlayerChat(socketPlayerChat, this);
+        t.start();
+
     
+    }
+    //-------------------------------------------------------------------------
     @Override
     public void run() {
          initSearchWord();
