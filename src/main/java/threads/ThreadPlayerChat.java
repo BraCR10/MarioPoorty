@@ -39,7 +39,7 @@ public class ThreadPlayerChat extends Thread{
                 msg = (Message) input.readObject();
                 String oldText=player.board.getJtaChatSpace().getText();
                 player.board.getJtaChatSpace().setText(oldText+"\n"
-                        +"--------------------------------------------------------"
+                        +"----------------------------------------------------------------------------"
                         +"\n"+msg.toString());
             } catch (IOException ex) {
                 Logger.getLogger(ThreadPlayerChat.class.getName()).log(Level.SEVERE, null, ex);

@@ -11,9 +11,9 @@ public class Pawn extends JLabel{
 
     public Pawn(String name) {
         super();
-        this.name = name;
+        this.name = name;  
         this.setIcon(new ImageIcon(getClass().getResource("/Characters/"+name+".png")));
-
+        
         this.setVisible(true);
         this.SetPosition(0);
         this.setSize(30, 30);

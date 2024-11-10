@@ -79,7 +79,7 @@ public class BomberMarioScreen extends JFrame implements IScreenMethods{
         bomb_simple = LoadImage.loadImageAdjusted(RESOURCEPATH + "simple_bomb.png", bombSize, bombSize);
         bomb_double = LoadImage.loadImageAdjusted(RESOURCEPATH + "double_bomb.png", bombSize, bombSize);
         bomb_cross = LoadImage.loadImageAdjusted(RESOURCEPATH + "cross_bomb.PNG", bombSize, bombSize);
-        bomb_line = LoadImage.loadImageAdjusted(RESOURCEPATH + "line_bomb.PNG", bombSize, bombSize);
+       bomb_line = LoadImage.loadImageAdjusted(RESOURCEPATH + "line_bomb.PNG", bombSize, bombSize);
         chest = LoadImage.loadImageAdjusted(RESOURCEPATH + "chest.png", bombSize, bombSize);
         chest_topleft = LoadImage.loadImageAdjusted(RESOURCEPATH + "chest_top_left.png",  boardSize + 10, boardSize + 10);
         chest_topright = LoadImage.loadImageAdjusted(RESOURCEPATH + "chest_top_right.png",  boardSize + 10, boardSize + 10);
@@ -286,7 +286,5 @@ public class BomberMarioScreen extends JFrame implements IScreenMethods{
     public JTextField getLabelCounter() {
         return labelCounter;
     }
-
-
 
 }

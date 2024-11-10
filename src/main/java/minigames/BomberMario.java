@@ -47,7 +47,7 @@ public class BomberMario extends MiniGames{
             screen.drawScreen();
             
         } catch (Exception e) {
-            throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+           throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }  
     }
     
@@ -124,9 +124,6 @@ public class BomberMario extends MiniGames{
         this.chestFoundPartCounter = chestFoundPartCounter;
     }
 
-    public static void main(String[] args) {
-       
-    }
 
     
  

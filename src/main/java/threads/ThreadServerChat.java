@@ -46,12 +46,7 @@ public class ThreadServerChat extends Thread{
     @Override
     public void run() {
         Message msg;
-        try {
-            
-            // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        } catch (IOException ex) {
-            Logger.getLogger(ThreadServerChat.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
        
         while (isRunning) {
             try {

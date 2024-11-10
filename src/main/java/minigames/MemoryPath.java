@@ -32,6 +32,7 @@ public class MemoryPath extends MiniGames {
 
     @Override
     public void startGame() {
+        this.board.setVisible(false);
         this.gamePanel = new MemoryPathScreen(this);
         configurePathMatrix();
         this.gamePanel.setVisible(true);

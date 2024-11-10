@@ -1,5 +1,6 @@
 package com.mycompany.proyect2;
 
+import BoardANDPawns.ServerConsoleScreen;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,11 +18,12 @@ import threads.ThreadServerChat;
 
 public class GameServer {
     private ServerSocket serverSocket;
-    
+    public ServerConsoleScreen console= new ServerConsoleScreen();
     private ArrayList<ServerPlayers> Players = new ArrayList<>();
     int NumPlayers = 0;
 
     private String[] types = new String[28];
+    private ArrayList<String> characterNames = new ArrayList<>();
     private boolean [] fixedPositions = new boolean[28];
     
     //Chat variables
@@ -33,27 +35,27 @@ public class GameServer {
     public GameServer() {
         
         this.TypesList();
-        
-        //To chat service
+          //To chat service
        try {
             serverSocketChat = new ServerSocket(CHAT_PORT);//1025-65535
             players=new ArrayList<>();
             threadConnectionsListener=new ConnectionThreadChat (this);
             threadConnectionsListener.start();
-            System.out.println("Ready to chat");
+            console.write("Ready to chat");
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
        //-------------------------------------------------------
         try {
-            serverSocket = new ServerSocket(123); 
+            loadCharacterNames();
             
+            serverSocket = new ServerSocket(122); 
             
             SearchPlayers();
             setOrder();
             
             for (int i = 0; i < NumPlayers; i++){
-                System.out.println("["+Players.get(i).Index+"] "+Players.get(i).name);
+                console.write("["+Players.get(i).Index+"] "+Players.get(i).name);
             }
             
             SentGeneralInfo();
@@ -63,29 +65,25 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        
-
     }
     
     // [Star the GAME] -------------------------------------------------------------------------
 
     private void setNumPlayers(){
         
-        Scanner scanner = new Scanner(System.in);
         
         while (!(1 <= NumPlayers && NumPlayers <= 6)) {
-            System.out.print("Enter the number of players: ");
-            NumPlayers = scanner.nextInt();
+            console.write("Enter the number of players: ");
+            NumPlayers = console.readInt();
         }
-        scanner.close();
+      
     }
 
     public void setOrder() throws IOException{
         Random random = new Random();
         
         int numeroRandom = random.nextInt(100); 
-         System.out.println("Random Number: " + numeroRandom);
+         console.write("Random Number: " + numeroRandom);
         
 
         for (int i = 0; i < NumPlayers;i++){
@@ -97,40 +95,44 @@ public class GameServer {
        Collections.sort(Players);
 
     }
-       
-    private void SearchPlayers(){
+    private void SearchPlayers() {
         setNumPlayers();
         try {
-            
-            for (int i = 0; i < NumPlayers; i++){
-                
-                System.out.println("Waiting for players to connect...");
-                Players.add(new ServerPlayers(serverSocket.accept()));
+            for (int i = 0; i < NumPlayers; i++) {
+                console.write("Waiting for players to connect...");
+                ServerPlayers newPlayer = new ServerPlayers(serverSocket.accept());
+                Players.add(newPlayer);
 
-                String newName = Players.get(i).playerIn.readUTF();
-
-                while (NameExists(newName,i)){
-                    Players.get(i).playerOut.writeBoolean(false);
-                    newName = Players.get(i).playerIn.readUTF();
-                }
-                Players.get(i).playerOut.writeBoolean(true);
-                Players.get(i).name = newName;
-                System.out.println("New player add : "+ newName);
                 
+                ThreadCatchNameServer playerThread = new ThreadCatchNameServer(newPlayer, this);
+                playerThread.start();
             }
-
-        } catch (IOException e) {e.printStackTrace();}
-        
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    
     
     private boolean NameExists(String newName, int MaximunPosition){
         for (int i = 0; i < MaximunPosition; i++){
-            System.out.println(Players.get(i).name);
+            console.write(Players.get(i).name);
             if (Players.get(i).name == null ? newName == null : Players.get(i).name.equals(newName)){return true;}
         }
         return false;
     }
-       
+    
+    private void loadCharacterNames(){
+        this.characterNames.add("Mario");
+        this.characterNames.add("Luigi");
+        this.characterNames.add("Bowser");
+        this.characterNames.add("Kamek");
+        this.characterNames.add("Dry Bones");
+        this.characterNames.add("Donkey Kong");
+        this.characterNames.add("Peach");
+        this.characterNames.add("Shy Guy");
+        this.characterNames.add("Toad");
+        this.characterNames.add("Yoshi");
+    }
     private void SentGeneralInfo(){
         try {
             String boardPlan = WriteGameBoard();
@@ -271,22 +273,100 @@ public class GameServer {
     }    
 
     private void GameLoop() {
-        
+        boolean finished = false;
         try {
-        while (true) {
+        while (!finished) {
             for (int index = 0; index < NumPlayers; index++){
-                Players.get(index).playerOut.writeBoolean(true);
-                String condition = Players.get(index).playerIn.readUTF();
                 
-                ReadCondition(condition, index);
+                Players.get(index).playerOut.writeBoolean(true);
+                console.write("Turn :"+Players.get(index).name);
+                
+                String condition = Players.get(index).playerIn.readUTF();
 
+                ReadCondition(condition, index);
+                ReadChangesInBoard(index);
+                
+                if("Win".equals(Players.get(index).playerIn.readUTF())){
+                    finished = true;
+                    break;
+                } 
             }
         }
-    } catch(IOException e){
-        System.out.println("Error reading player coordinates: " + e.getMessage());
+        this.serverSocket.close();
+    
+        } catch(IOException e){
+        console.write("Error reading player coordinates: " + e.getMessage());
         }
     }
-    //BroadCoast funtion for chat
+
+    
+    public static void main(String[] args) {
+        new GameServer();
+    }
+
+    
+    
+    public void ReadCondition(String condition, int index){
+        try{
+        String name;
+        switch (condition) {
+            case "Roll":
+                name = Players.get(index).playerIn.readUTF();
+                int position =  Players.get(index).playerIn.readInt();
+                
+                for (int i = 0; i < NumPlayers; i++){
+                    if (i != index){Players.get(i).playerOut.writeBoolean(false);}
+                    Players.get(i).playerOut.writeUTF(name);
+                    Players.get(i).playerOut.writeInt(position);
+                }
+                break;
+ 
+            default:
+                for (int i = 0; i < NumPlayers; i++){
+                    if (i != index){Players.get(i).playerOut.writeBoolean(false);}
+                    Players.get(i).playerOut.writeUTF(Players.get(i).name);
+                    Players.get(i).playerOut.writeInt(-1);
+                    ReadChangesInBoard(index);
+                }
+                break;
+
+        }
+        }catch(IOException e){}
+
+    }
+    
+    public void ReadChangesInBoard(int index) throws IOException{
+        String Changes = Players.get(index).playerIn.readUTF();
+        if (!"No".equals(Changes)){
+            if ("Move".equals(Changes)){MoveCharacter(index);}
+            if ("Freeze".equals(Changes)){FreezeCharacter(index);}
+        } else {
+            for (int i = 0; i < NumPlayers; i++){
+                Players.get(i).playerOut.writeUTF("Nothing");
+            }
+        }
+    }
+    
+    public void MoveCharacter(int index) throws IOException{
+        String cha = Players.get(index).playerIn.readUTF();
+        int position = Players.get(index).playerIn.readInt();
+        
+        for (int i = 0; i < NumPlayers; i++){
+            Players.get(i).playerOut.writeUTF("Move");
+            Players.get(i).playerOut.writeUTF(cha);
+            Players.get(i).playerOut.writeInt(position);
+        }
+    }
+    
+    public void FreezeCharacter(int index) throws IOException{
+    String cha = Players.get(index).playerIn.readUTF();
+        
+        for (int i = 0; i < NumPlayers; i++){
+            Players.get(i).playerOut.writeUTF("Freeze");
+            Players.get(i).playerOut.writeUTF(cha);
+        }
+    }
+     //BroadCoast funtion for chat
      public void broadCoast(Message msj){
         
         for (ThreadServerChat player : players) {
@@ -298,31 +378,18 @@ public class GameServer {
         }
     
     }
-     
-    public static void main(String[] args) {
-        new GameServer();
+
+    public ArrayList<String> getCharacterNames() {
+        return characterNames;
     }
 
-    public void ReadCondition(String condition, int index){
-        try{
-        switch (condition) {
-            //case "Roll":
-                default:
-                String name = Players.get(index).playerIn.readUTF();
-                int position =  Players.get(index).playerIn.readInt();
-                
-                for (int i = 0; i < NumPlayers; i++){
-                    if (i != index){Players.get(i).playerOut.writeBoolean(false);}
-                    Players.get(i).playerOut.writeUTF(name);
-                    Players.get(i).playerOut.writeInt(position);
-                }
-                break;
-
-        }
-        }catch(IOException e){}
-
+    public ArrayList<ServerPlayers> getPlayers() {
+        return Players;
     }
-    
+
+    public void setCharacterNames(ArrayList<String> characterNames) {
+        this.characterNames = characterNames;
+    }
     
 }
 

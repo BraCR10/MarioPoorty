@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Comparator;
 
@@ -12,6 +13,8 @@ public class ServerPlayers implements Comparable<ServerPlayers>{
     
     public DataOutputStream playerOut;
     public DataInputStream playerIn;
+    
+    public ObjectOutputStream playerOutObj;
     
     
     public int positionStar = 0;
@@ -28,6 +31,7 @@ public class ServerPlayers implements Comparable<ServerPlayers>{
         this.socket = socket;
         this.playerOut = new DataOutputStream(this.socket.getOutputStream());
         this.playerIn = new DataInputStream(this.socket.getInputStream());
+        this.playerOutObj=new ObjectOutputStream(this.socket.getOutputStream());
         this.positionStar = 0;
         this.positionFinish = 0;
         } 
