@@ -11,8 +11,7 @@ package threads;
 import com.mycompany.proyect2.GameServer;
 import com.mycompany.proyect2.ServerPlayers;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class ThreadReceivePlayerFirstInfoServer extends Thread {
     private ServerPlayers player;
