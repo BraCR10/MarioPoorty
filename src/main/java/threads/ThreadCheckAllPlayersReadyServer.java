@@ -2,22 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.proyect2;
+package threads;
 
 /**
  *
  * @author Brian Ramirez
  */
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.mycompany.proyect2.GameServer;
 
-public class ThreadStartGame extends Thread {
+
+public class ThreadCheckAllPlayersReadyServer extends Thread {
 
     private GameServer server;
     private boolean isRunning;
 
-    public ThreadStartGame( GameServer server) {
+    public ThreadCheckAllPlayersReadyServer( GameServer server) {
         this.server=server;
         this.isRunning = true;
     }
@@ -47,7 +47,7 @@ public class ThreadStartGame extends Thread {
                 try {
                     sleep(5);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(ThreadStartGame.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("Sleeping!!");
                 }
             }
             

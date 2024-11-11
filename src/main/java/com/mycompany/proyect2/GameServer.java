@@ -1,5 +1,7 @@
 package com.mycompany.proyect2;
 
+import threads.ThreadCheckAllPlayersReadyServer;
+import threads.ThreadReceivePlayerFirstInfoServer;
 import BoardANDPawns.ServerConsoleScreen;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,13 +22,12 @@ public class GameServer {
     private ServerSocket serverSocket;
     private ArrayList<ServerPlayers> Players = new ArrayList<>();
     private String[] types = new String[28];
-    int NumPlayers = 0;
+    public int NumPlayers = 0;
     private boolean [] fixedPositions = new boolean[28];
     
     //Wait for each player to estar the game settings
     int numeroRandom ;
-    private ArrayList<String> characterNames = new ArrayList<>();
-    public ArrayList< ThreadCatchNameServer> threadsFirstMenuPlayers;//a thread for each player, when the player are ready to start, tje thread will stop
+    public ArrayList< ThreadReceivePlayerFirstInfoServer> threadsFirstMenuPlayers;//a thread for each player, when the player are ready to start, tje thread will stop
     
     //Chat server settings
     private final int CHAT_PORT = 3006;
@@ -51,7 +52,6 @@ public class GameServer {
        //-------------------------------------------------------
        //start the game
         try {
-            loadCharacterNames();
             
             Random random = new Random();
             numeroRandom = random.nextInt(100); 
@@ -62,7 +62,7 @@ public class GameServer {
             
             //to recive info of each player in parallel
             SearchPlayers();
-            ThreadStartGame startGame=new ThreadStartGame(this);
+            ThreadCheckAllPlayersReadyServer startGame=new ThreadCheckAllPlayersReadyServer(this);
             startGame.start();//when all players are ready to start, this thread start the game loop and general funtions
 
         } catch (IOException e) {
@@ -93,7 +93,8 @@ public class GameServer {
                 ServerPlayers newPlayer = new ServerPlayers(serverSocket.accept());
                 Players.add(newPlayer);
                 
-                ThreadCatchNameServer playerThread = new ThreadCatchNameServer(newPlayer,i, this);
+                newPlayer.playerOut.writeBoolean(true);//to confirm acceptance
+                ThreadReceivePlayerFirstInfoServer playerThread = new ThreadReceivePlayerFirstInfoServer(newPlayer,i, this);
                 playerThread.start();//each thread will recive the name selected and the number
                 threadsFirstMenuPlayers.add(playerThread);
             }
@@ -102,25 +103,7 @@ public class GameServer {
         }
     }
     
-    
-
-    private void loadCharacterNames(){//funtion to load each name
-        this.characterNames.add("Mario");
-        this.characterNames.add("Luigi");
-        this.characterNames.add("Bowser");
-        this.characterNames.add("Kamek");
-        this.characterNames.add("Dry Bones");
-        this.characterNames.add("Donkey Kong");
-        this.characterNames.add("Peach");
-        this.characterNames.add("Shy Guy");
-        this.characterNames.add("Toad");
-        this.characterNames.add("Yoshi");
-    }
-    
-    public ArrayList<String> getCharacterNames() {
-        System.out.println("Desde el sercver "+ characterNames);
-        return characterNames;
-    }
+   
 
     public ArrayList<ServerPlayers> getPlayers() {
         return Players;
@@ -129,8 +112,14 @@ public class GameServer {
     public int getNumeroRandom() {
         return numeroRandom;
     }
+    
+     public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
     //end of name and number settings
     //--------------------------------------------------------------------------
+
+   
     
     
     public void SentGeneralInfo(){
@@ -373,7 +362,7 @@ public class GameServer {
             try {
                 player.output.writeObject(msj);
             } catch (IOException ex) {
-                Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
+              this.console.write("Unable to send a broadcoast message");
             }
         }
     

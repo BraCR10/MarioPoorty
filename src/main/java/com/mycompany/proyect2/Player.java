@@ -1,11 +1,10 @@
 package com.mycompany.proyect2;
 
 import BoardANDPawns.DiceRoller;
-import BoardANDPawns.firstScreenPlayers;
+import BoardANDPawns.SelectCharacterScreen;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -24,43 +23,39 @@ import minigames.WordSearch;
 import threads.ThreadPlayerChat;
 
 public class Player implements Runnable{
-    //Player server connections settings
+    //Player game server connections settings
     public Socket socket;
     public int NumPlayer;
-    
     public DataOutputStream out;
-    public ObjectInputStream inObj;
     public DataInputStream in;
     public Board board;
-    
-    private ArrayList<String> characterNames ;
-    
-     public JFrame miniGameScreen=null;
-    public MiniGames miniGame ;
-    private static ArrayList<Player> players = new ArrayList<>();
-    public firstScreenPlayers firstScreen;
-
     public String Condition = "Roll";
     public boolean isMyTurn = false;
-    
-    public String name = "Shy Guy";
     public JLabel Pawn; 
     private Thread thread;
-    public Scanner sc = new Scanner(System.in);
     public int LoseTurn = 0;
     
-        //For chat services
+    //games screens and settings
+    public JFrame miniGameScreen=null;
+    public MiniGames miniGame ;
+    private static ArrayList<Player> players = new ArrayList<>();
+    
+    //first menu settings
+    public SelectCharacterScreen selectCharacterScreen;
+    public String name = "Mario";
+   
+    
+    //For chat services
     Socket socketPlayerChat;
     private final int CHAT_PORT = 3006;
     public ObjectOutputStream output;
     public DataOutputStream outputData;
     
+    
     public Player(Socket socket, DataInputStream in, DataOutputStream out){
         this.socket = socket;
         this.in = in;
-        this.out = out;
-        
-        
+        this.out = out;    
         //for chat
         try {
             connect();
@@ -68,9 +63,7 @@ public class Player implements Runnable{
             
         }
     }
-    
-    
-    
+  
     public Player() throws InterruptedException {
         try {
 
@@ -78,31 +71,26 @@ public class Player implements Runnable{
             this.socket = new Socket("localhost", 122);
             this.out = new DataOutputStream(socket.getOutputStream());
             this.in = new DataInputStream(socket.getInputStream());
-            this.inObj= new ObjectInputStream(socket.getInputStream());
             players.add(this);
             
-            try {
-                // Set name & the turn
-                this.characterNames=(ArrayList<String>)inObj.readObject();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+            //set name settings
+            if(in.readBoolean()){//to confirm acceptance
+                selectCharacterScreen=new SelectCharacterScreen(this);
+                SetName();
+                
+                ReciveGeneralInfo();
+                this.selectCharacterScreen.dispose();//to delete the first sreen and start the game
+                
+                //start the game
+                this.thread = new Thread(this, "Game");
+                this.thread.start();
+
+
+                 //For chat
+                connect();
             }
-            firstScreen=new firstScreenPlayers(characterNames,this);
-            SetName();
-            
-            ReciveGeneralInfo();
-
-   
-            
-            this.thread = new Thread(this, "Game");
-            this.thread.start();
-        
-            
-             //For chat
-            connect();
-
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Sorry the server is down!!!");
         }
     }
     
@@ -125,9 +113,13 @@ public class Player implements Runnable{
     private void SetName() throws IOException{
         boolean accepted = in.readBoolean();
         while (!accepted){
-            this.firstScreen.NameCaseRejected();
+            this.selectCharacterScreen.NameCaseRejected();
             accepted = in.readBoolean();
         }
+        
+    }
+    public void setName(String name) {
+        this.name = name;
     }
     
     //--------------------------------------------------------------------------
@@ -426,10 +418,7 @@ public class Player implements Runnable{
         miniGame.playTurn();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
+
     public static void main(String[] args) throws InterruptedException {
         new Player();
        

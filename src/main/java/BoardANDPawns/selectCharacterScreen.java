@@ -15,27 +15,46 @@ import minigames.LoadImage;
  *
  * @author brian
  */
-public class firstScreenPlayers extends javax.swing.JFrame {
+public class SelectCharacterScreen extends javax.swing.JFrame {
     private String characterSelected;
     private ArrayList<String> ListCharacters;
     private Player player;
    
     
-    public firstScreenPlayers( ArrayList<String> ListCharacters,Player player) {
-       this.ListCharacters = ListCharacters;
+    public SelectCharacterScreen(Player player) {
+       this.ListCharacters = new ArrayList<>();
+       loadCharacterNames();
        initComponents();
        this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
        this.setVisible(true);
-       this.JLImages.setIcon(LoadImage.loadImageAdjusted("/GuessWho/mario.png", 500, 500));
+       this.JLImages.setIcon(LoadImage.loadImageAdjusted("/firstMenuCharacters/Mario.png", 400, 400));//default
+       //listener to change
+        jComboBox1.addActionListener(e -> {
+            String selectedCharacter = (String) jComboBox1.getSelectedItem();
+            this.JLImages.setIcon(LoadImage.loadImageAdjusted("/firstMenuCharacters/" + selectedCharacter + ".png", 400, 400));
+        });
+
        this.setResizable(false);
        this.player=player;
        this.setTitle("Mario Poorty");
        this.tfNumber.setEditable(false);
        this.startButtom.setEnabled(false);
        this.waitLabel.setVisible(false);
+       this.alreadyChosenLabel.setVisible(false);
        
     }
-
+    private void loadCharacterNames(){//funtion to load each name
+        this.ListCharacters.add("Mario");
+        this.ListCharacters.add("Luigi");
+        this.ListCharacters.add("Bowser");
+        this.ListCharacters.add("Kamek");
+        this.ListCharacters.add("Dry Bones");
+        this.ListCharacters.add("Donkey Kong");
+        this.ListCharacters.add("Peach");
+        this.ListCharacters.add("Shy Guy");
+        this.ListCharacters.add("Toad");
+        this.ListCharacters.add("Yoshi");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,21 +74,37 @@ public class firstScreenPlayers extends javax.swing.JFrame {
         chooseButtom = new javax.swing.JButton();
         startButtom = new javax.swing.JButton();
         waitLabel = new javax.swing.JLabel();
+        alreadyChosenLabel = new javax.swing.JLabel();
         JLImages = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(255, 102, 102));
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
         jTextField1.setEditable(false);
+        jTextField1.setFont(new java.awt.Font("Jokerman", 2, 24)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(255, 0, 51));
+        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setText("Welcome to Mario Poorty");
+        jTextField1.setBorder(null);
 
         jTextField2.setEditable(false);
+        jTextField2.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
         jTextField2.setText("Select a character!");
+        jTextField2.setBorder(null);
+
+        jComboBox1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(51, 51, 51));
 
         jTextField4.setEditable(false);
-        jTextField4.setText("Choose a number[1 - 100] :");
+        jTextField4.setFont(new java.awt.Font("Tempus Sans ITC", 1, 12)); // NOI18N
+        jTextField4.setText("Choose a number [1 - 100] :");
 
+        tfNumber.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
+
+        chooseButtom.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
         chooseButtom.setText("Choose Character");
         chooseButtom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -77,6 +112,7 @@ public class firstScreenPlayers extends javax.swing.JFrame {
             }
         });
 
+        startButtom.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
         startButtom.setText("Start the game");
         startButtom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,7 +120,13 @@ public class firstScreenPlayers extends javax.swing.JFrame {
             }
         });
 
+        waitLabel.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        waitLabel.setForeground(new java.awt.Color(0, 0, 0));
         waitLabel.setText("Wait for the other players!");
+
+        alreadyChosenLabel.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        alreadyChosenLabel.setForeground(new java.awt.Color(153, 0, 51));
+        alreadyChosenLabel.setText("The character has been already chosen");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -93,51 +135,54 @@ public class firstScreenPlayers extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(122, 122, 122)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(25, 25, 25)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tfNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(53, 53, 53)
+                        .addComponent(alreadyChosenLabel))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(tfNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addGap(108, 108, 108)
+                        .addComponent(chooseButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 28, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(chooseButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(91, 91, 91))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(129, 129, 129))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(startButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(90, 90, 90))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(waitLabel)
-                        .addGap(108, 108, 108))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(waitLabel)
+                            .addComponent(startButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(94, 94, 94))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(26, 26, 26)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(33, 33, 33)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chooseButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76)
+                .addGap(17, 17, 17)
+                .addComponent(alreadyChosenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
                 .addComponent(startButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addComponent(waitLabel)
                 .addContainerGap())
         );
@@ -149,7 +194,7 @@ public class firstScreenPlayers extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(JLImages, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -185,15 +230,18 @@ public class firstScreenPlayers extends javax.swing.JFrame {
             this.tfNumber.setEditable(true);
             this.startButtom.setEnabled(true);
             this.chooseButtom.setEnabled(false);
+            player.setName((String) jComboBox1.getSelectedItem());
+            this.alreadyChosenLabel.setVisible(false);
+            this.jComboBox1.setEnabled(false);
         } catch (IOException ex) {
-            Logger.getLogger(firstScreenPlayers.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SelectCharacterScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_chooseButtomActionPerformed
 
     private void startButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtomActionPerformed
         try {
             try {
-                if(Integer.parseInt(tfNumber.getText())<=100){
+                if(Integer.parseInt(tfNumber.getText())>0&&Integer.parseInt(tfNumber.getText())<=100){
                     int number = Integer.parseInt(tfNumber.getText()); 
                     player.out.writeInt(number); 
                 }else{ 
@@ -207,17 +255,18 @@ public class firstScreenPlayers extends javax.swing.JFrame {
                 player.out.writeInt(randomNumber);
             }
         } catch (IOException ex) {
-            Logger.getLogger(firstScreenPlayers.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SelectCharacterScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.startButtom.setEnabled(false);
         this.waitLabel.setVisible(true);
     }//GEN-LAST:event_startButtomActionPerformed
 
 
-
     public void NameCaseRejected() {
        ListCharacters.remove(characterSelected);
        SwingUtilities.invokeLater(() -> {
+           this.alreadyChosenLabel.setVisible(true);
+           this.jComboBox1.setEnabled(true);
            this.startButtom.setEnabled(false);
            this.chooseButtom.setEnabled(true);
            this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
@@ -226,6 +275,7 @@ public class firstScreenPlayers extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JLImages;
+    private javax.swing.JLabel alreadyChosenLabel;
     private javax.swing.JButton chooseButtom;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JPanel jPanel1;

@@ -2,23 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.proyect2;
+package threads;
 
 /**
  *
  * @author Brian Ramirez
  */
+import com.mycompany.proyect2.GameServer;
+import com.mycompany.proyect2.ServerPlayers;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ThreadCatchNameServer extends Thread {
+public class ThreadReceivePlayerFirstInfoServer extends Thread {
     private ServerPlayers player;
     GameServer server;
     int position;
     private boolean isRunning;
 
-    public ThreadCatchNameServer(ServerPlayers player,int position, GameServer server) {
+    public ThreadReceivePlayerFirstInfoServer(ServerPlayers player,int position, GameServer server) {
         this.player = player;
         this.server=server;
         this.position=position;
@@ -35,8 +37,6 @@ public class ThreadCatchNameServer extends Thread {
                 newName = player.playerIn.readUTF();
  
             }
-            server.getCharacterNames().remove(newName);
-            server.console.write("Names available "+server.getCharacterNames());
             
             //CONFIRMATION
             player.playerOut.writeBoolean(true); 
@@ -53,7 +53,7 @@ public class ThreadCatchNameServer extends Thread {
             server.console.write("\n"+newName+" ready to play!");
             stopRunning();
         } catch (IOException e) {
-            Logger.getLogger(ThreadCatchNameServer.class.getName()).log(Level.SEVERE, null, e);
+            server.console.write("A player lost the connetion");
         }
     }
 

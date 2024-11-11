@@ -55,9 +55,9 @@ public class ThreadServerChat extends Thread{
                 server.broadCoast(msg);
                 
             } catch (IOException ex) {
-                Logger.getLogger(ThreadServerChat.class.getName()).log(Level.SEVERE, null, ex);
+                //a player lost connection
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ThreadServerChat.class.getName()).log(Level.SEVERE, null, ex);
+                //a player lost connection
             }
             
         }
