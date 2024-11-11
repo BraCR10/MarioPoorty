@@ -245,7 +245,7 @@ public class WordSearch extends MiniGames{
         return counterCollectedWords;
     }
 
-    
+
  
 }
 

@@ -108,7 +108,7 @@ public class CollectCoins extends MiniGames{
     public int getScore() {
         return score;
     }
-    
+
     
 }
 

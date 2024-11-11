@@ -254,7 +254,7 @@ public class CatchTheCat extends MiniGames{
     public void setEnableCatMovement(boolean enableCatMovement) {
         this.enableCatMovement = enableCatMovement;
     }
-    
+
 }
     
 
