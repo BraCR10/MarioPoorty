@@ -28,7 +28,7 @@ public class SelectCharacterScreen extends javax.swing.JFrame {
        this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
        this.setVisible(true);
        this.JLImages.setIcon(LoadImage.loadImageAdjusted("/firstMenuCharacters/Mario.png", 400, 400));//default
-       //listener to change
+       //listener to change the image according to the combo box 
         jComboBox1.addActionListener(e -> {
             String selectedCharacter = (String) jComboBox1.getSelectedItem();
             this.JLImages.setIcon(LoadImage.loadImageAdjusted("/firstMenuCharacters/" + selectedCharacter + ".png", 400, 400));

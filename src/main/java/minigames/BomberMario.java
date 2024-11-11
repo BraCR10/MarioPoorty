@@ -32,13 +32,20 @@ public class BomberMario extends MiniGames{
         this.boardDisplaySize=enableSizes[boardDisplaySize];
         
         randomChestPositions=new Point[4];
-        for (int i = 0; i < 4; i++) {
-            randomChestPositions[i]=(new Point(randomNumber.nextInt(boardDisplaySize),randomNumber.nextInt(boardDisplaySize)));
-        }
+        chooseRandomPosition();
         bombsCounter=7;
         chestFoundPartCounter=1;
     }
-        
+    private void chooseRandomPosition(){
+        for (int i = 0; i < 4; i++) {
+            randomChestPositions[i]=(new Point(randomNumber.nextInt(boardDisplaySize),randomNumber.nextInt(boardDisplaySize)));
+        }
+        //to show solution
+        System.out.println("\n Bomber Mario chest position");
+        for (int i = 0; i < 4; i++) {
+            System.out.println((i+1)+" x= "+randomChestPositions[i].y+" , y="+randomChestPositions[i].x);
+        }
+    }
     
     private void configurateScreen(){
        try {

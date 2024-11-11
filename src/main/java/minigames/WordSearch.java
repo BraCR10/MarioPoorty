@@ -51,12 +51,21 @@ public class WordSearch extends MiniGames{
             word=i;
             placeWord(word);
         }
-        
+         //to show solution
+            System.out.println("\n Word search solution");
+            for (int i = 0; i < boardDisplaySize; i++) {
+                for (int j = 0; j < boardDisplaySize; j++) {
+                    System.out.print("|"+matrizChars[i][j]+"|");
+
+                }
+                System.out.println(" ");
+            }
         for (int i = 0; i < boardDisplaySize; i++) {
             for (int j = 0; j < boardDisplaySize; j++) {
                  if (matrizChars[i][j] == ' ') 
                     matrizChars[i][j] = (char) ('A'+randomNumber.nextInt(26) ); //A - Z
             }
+           
         }
     
     
