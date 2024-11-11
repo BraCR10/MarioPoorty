@@ -84,6 +84,7 @@ public class SelectCharacterScreen extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jTextField1.setEditable(false);
+        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
         jTextField1.setFont(new java.awt.Font("Jokerman", 2, 24)); // NOI18N
         jTextField1.setForeground(new java.awt.Color(255, 0, 51));
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
