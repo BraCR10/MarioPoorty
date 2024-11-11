@@ -81,10 +81,13 @@ public class ServerConsoleScreen extends javax.swing.JFrame {
         lastPrintedPosition = jTextArea1.getText().length(); 
     }
     
-     public String readText() {
+    public String readText() {
         jTextArea1.setEditable(true);
         userInput = null;
         jTextArea1.append("\n"); 
+
+        // Move cursor to the end of the text area
+        jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
 
         while (userInput == null) {
             try {
