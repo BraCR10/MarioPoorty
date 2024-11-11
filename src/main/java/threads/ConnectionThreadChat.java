@@ -31,7 +31,7 @@ public class ConnectionThreadChat extends Thread{
                 Socket socket = server.serverSocketChat.accept();
                 ThreadServerChat t = new ThreadServerChat(socket, server);
                 t.start();
-                server.players.add(t);
+                server.playersChat.add(t);
 
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionThreadChat.class.getName()).log(Level.SEVERE, null, ex);

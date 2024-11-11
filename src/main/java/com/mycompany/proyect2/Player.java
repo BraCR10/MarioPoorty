@@ -24,6 +24,7 @@ import minigames.WordSearch;
 import threads.ThreadPlayerChat;
 
 public class Player implements Runnable{
+    //Player server connections settings
     public Socket socket;
     public int NumPlayer;
     
@@ -80,11 +81,14 @@ public class Player implements Runnable{
             this.inObj= new ObjectInputStream(socket.getInputStream());
             players.add(this);
             
-            // Set name & the turn
-            readListCaracters();
+            try {
+                // Set name & the turn
+                this.characterNames=(ArrayList<String>)inObj.readObject();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+            }
             firstScreen=new firstScreenPlayers(characterNames,this);
             SetName();
-            //setPosition();
             
             ReciveGeneralInfo();
 
@@ -116,31 +120,17 @@ public class Player implements Runnable{
         }
     }
     // -------------------------------------------------------------------------
+    //Function to get info about the allowed names from the server
+    //The outputs are sent by the screen
     private void SetName() throws IOException{
-
         boolean accepted = in.readBoolean();
         while (!accepted){
-            readListCaracters();
-            firstScreen.setListCharacters(characterNames);
+            this.firstScreen.NameCaseRejected();
             accepted = in.readBoolean();
         }
     }
     
-    private void  readListCaracters(){
-        try {
-            try {
-                characterNames=(ArrayList<String>)inObj.readObject();
-                
-            } catch (IOException ex) {
-                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    /*In the first screen
-    private void setPosition() throws IOException{
-    }*/
+    //--------------------------------------------------------------------------
     
     private void ReciveGeneralInfo() throws IOException{
         

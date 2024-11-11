@@ -16,16 +16,15 @@ import minigames.LoadImage;
  * @author brian
  */
 public class firstScreenPlayers extends javax.swing.JFrame {
-
-    private String CharacterSelected;
+    private String characterSelected;
     private ArrayList<String> ListCharacters;
     private Player player;
    
     
     public firstScreenPlayers( ArrayList<String> ListCharacters,Player player) {
-        this.ListCharacters = ListCharacters;
-        initComponents();
-        this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
+       this.ListCharacters = ListCharacters;
+       initComponents();
+       this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
        this.setVisible(true);
        this.JLImages.setIcon(LoadImage.loadImageAdjusted("/GuessWho/mario.png", 500, 500));
        this.setResizable(false);
@@ -33,6 +32,7 @@ public class firstScreenPlayers extends javax.swing.JFrame {
        this.setTitle("Mario Poorty");
        this.tfNumber.setEditable(false);
        this.startButtom.setEnabled(false);
+       this.waitLabel.setVisible(false);
        
     }
 
@@ -54,6 +54,7 @@ public class firstScreenPlayers extends javax.swing.JFrame {
         tfNumber = new javax.swing.JTextField();
         chooseButtom = new javax.swing.JButton();
         startButtom = new javax.swing.JButton();
+        waitLabel = new javax.swing.JLabel();
         JLImages = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -62,22 +63,12 @@ public class firstScreenPlayers extends javax.swing.JFrame {
 
         jTextField1.setEditable(false);
         jTextField1.setText("Welcome to Mario Poorty");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
 
         jTextField2.setEditable(false);
         jTextField2.setText("Select a character!");
 
         jTextField4.setEditable(false);
         jTextField4.setText("Choose a number[1 - 100] :");
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
-            }
-        });
 
         chooseButtom.setText("Choose Character");
         chooseButtom.addActionListener(new java.awt.event.ActionListener() {
@@ -92,6 +83,8 @@ public class firstScreenPlayers extends javax.swing.JFrame {
                 startButtomActionPerformed(evt);
             }
         });
+
+        waitLabel.setText("Wait for the other players!");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -122,7 +115,10 @@ public class firstScreenPlayers extends javax.swing.JFrame {
                         .addGap(91, 91, 91))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(startButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(90, 90, 90))))
+                        .addGap(90, 90, 90))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(waitLabel)
+                        .addGap(108, 108, 108))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,7 +137,9 @@ public class firstScreenPlayers extends javax.swing.JFrame {
                     .addComponent(tfNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addComponent(startButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addComponent(waitLabel)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -183,20 +181,14 @@ public class firstScreenPlayers extends javax.swing.JFrame {
     private void chooseButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseButtomActionPerformed
         try {
             player.out.writeUTF((String) jComboBox1.getSelectedItem());
+            characterSelected=(String) jComboBox1.getSelectedItem();
             this.tfNumber.setEditable(true);
             this.startButtom.setEnabled(true);
+            this.chooseButtom.setEnabled(false);
         } catch (IOException ex) {
             Logger.getLogger(firstScreenPlayers.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_chooseButtomActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void startButtomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtomActionPerformed
         try {
@@ -217,14 +209,20 @@ public class firstScreenPlayers extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(firstScreenPlayers.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.startButtom.setEnabled(false);
+        this.waitLabel.setVisible(true);
     }//GEN-LAST:event_startButtomActionPerformed
 
-    public void setListCharacters(ArrayList<String> ListCharacters) {
-       this.ListCharacters = ListCharacters;
-        
-       jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
-        
-    }
+
+
+    public void NameCaseRejected() {
+       ListCharacters.remove(characterSelected);
+       SwingUtilities.invokeLater(() -> {
+           this.startButtom.setEnabled(false);
+           this.chooseButtom.setEnabled(true);
+           this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(ListCharacters.toArray(new String[0])));
+       });
+   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JLImages;
@@ -237,5 +235,6 @@ public class firstScreenPlayers extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JButton startButtom;
     private javax.swing.JTextField tfNumber;
+    private javax.swing.JLabel waitLabel;
     // End of variables declaration//GEN-END:variables
 }

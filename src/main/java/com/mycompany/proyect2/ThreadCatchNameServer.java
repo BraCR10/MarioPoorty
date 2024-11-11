@@ -9,70 +9,70 @@ package com.mycompany.proyect2;
  * @author Brian Ramirez
  */
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ThreadCatchNameServer extends Thread {
     private ServerPlayers player;
     GameServer server;
+    int position;
     private boolean isRunning;
 
-    public ThreadCatchNameServer(ServerPlayers player, GameServer server) {
+    public ThreadCatchNameServer(ServerPlayers player,int position, GameServer server) {
         this.player = player;
         this.server=server;
+        this.position=position;
         this.isRunning = true;
     }
 
     @Override
     public void run() {
         try {
-            String newName = characterNamesManager(player);
-
-            while (isRunning && NameExists(newName)) {
-                player.playerOut.writeBoolean(false);  
-                newName = characterNamesManager(player); 
+    
+            String newName = player.playerIn.readUTF();
+            while ( NameExists(newName)) {//IF THE NAME IS NOT ALLOWED
+                player.playerOut.writeBoolean(false); 
+                newName = player.playerIn.readUTF();
+ 
             }
-
+            server.getCharacterNames().remove(newName);
+            server.console.write("Names available "+server.getCharacterNames());
+            
+            //CONFIRMATION
             player.playerOut.writeBoolean(true); 
-            player.name = newName;
-            server.console.write("New player added: " + newName);
+            
+            server.getPlayers().get(position).name=newName;
+            server.console.write("\nNew player added: " + newName);
+            
+            //SETTINGS TO DEFINE THE ORDER TO PLAY
+            server.console.write("\nAsking for number to "+newName);
+            server.getPlayers().get(position).NumberStart = server.getNumeroRandom();
+            server.getPlayers().get(position).Index = server.getPlayers().get(position).playerIn.readInt();
+    
 
+            server.console.write("\n"+newName+" ready to play!");
+            stopRunning();
         } catch (IOException e) {
             Logger.getLogger(ThreadCatchNameServer.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
-    // Método para manejar la selección del nombre del jugador
-    private String characterNamesManager(ServerPlayers player) {
-        String name = server.getCharacterNames().get(0);
-        try {
-            
-            player.playerOutObj.writeObject(server.getCharacterNames());
-            name = player.playerIn.readUTF();
 
-            
-
-        } catch (IOException ex) {
-            Logger.getLogger(ThreadCatchNameServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return name;
-    }
-
-    // Método para verificar si el nombre ya existe entre los jugadores
     private boolean NameExists(String name) {
-        synchronized (players) {
-            for (ServerPlayers p : players) {
-                if (p.name != null && p.name.equals(name)) {
-                    return true;
-                }
+        for (ServerPlayers p : server.getPlayers()) {
+            if (p.name != null && p.name.equals(name)) {
+                return true;
             }
         }
         return false;
     }
 
-    // Detener el hilo si es necesario
     public void stopRunning() {
         isRunning = false;
     }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+    
 }

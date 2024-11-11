@@ -1,15 +1,11 @@
 package com.mycompany.proyect2;
 
 import BoardANDPawns.ServerConsoleScreen;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,28 +13,35 @@ import threads.ConnectionThreadChat;
 import threads.ThreadServerChat;
 
 public class GameServer {
+    //console
+     public ServerConsoleScreen console= new ServerConsoleScreen();
+        
+    //Game server settings
     private ServerSocket serverSocket;
-    public ServerConsoleScreen console= new ServerConsoleScreen();
     private ArrayList<ServerPlayers> Players = new ArrayList<>();
-    int NumPlayers = 0;
-
     private String[] types = new String[28];
-    private ArrayList<String> characterNames = new ArrayList<>();
+    int NumPlayers = 0;
     private boolean [] fixedPositions = new boolean[28];
     
-    //Chat variables
+    //Wait for each player to estar the game settings
+    int numeroRandom ;
+    private ArrayList<String> characterNames = new ArrayList<>();
+    public ArrayList< ThreadCatchNameServer> threadsFirstMenuPlayers;//a thread for each player, when the player are ready to start, tje thread will stop
+    
+    //Chat server settings
     private final int CHAT_PORT = 3006;
     public ServerSocket serverSocketChat;
-    public ArrayList<ThreadServerChat> players;
+    public ArrayList<ThreadServerChat> playersChat;
     ConnectionThreadChat threadConnectionsListener;
     
     public GameServer() {
-        
         this.TypesList();
-          //To chat service
+       
+        //------------------------------------------------------------
+       //To chat service
        try {
             serverSocketChat = new ServerSocket(CHAT_PORT);//1025-65535
-            players=new ArrayList<>();
+            playersChat=new ArrayList<>();
             threadConnectionsListener=new ConnectionThreadChat (this);
             threadConnectionsListener.start();
             console.write("Ready to chat");
@@ -46,21 +49,21 @@ public class GameServer {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
        //-------------------------------------------------------
+       //start the game
         try {
             loadCharacterNames();
             
+            Random random = new Random();
+            numeroRandom = random.nextInt(100); 
+            console.write("Random Number: " + numeroRandom);
+            
             serverSocket = new ServerSocket(122); 
+            threadsFirstMenuPlayers=new ArrayList<>();
             
+            //to recive info of each player in parallel
             SearchPlayers();
-            setOrder();
-            
-            for (int i = 0; i < NumPlayers; i++){
-                console.write("["+Players.get(i).Index+"] "+Players.get(i).name);
-            }
-            
-            SentGeneralInfo();
-            
-            GameLoop();
+            ThreadStartGame startGame=new ThreadStartGame(this);
+            startGame.start();//when all players are ready to start, this thread start the game loop and general funtions
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,10 +71,9 @@ public class GameServer {
     }
     
     // [Star the GAME] -------------------------------------------------------------------------
-
+    //--------------------------------------------------------------------------
+    //functions to manage the entry of each player’s name and number to get started
     private void setNumPlayers(){
-        
-        
         while (!(1 <= NumPlayers && NumPlayers <= 6)) {
             console.write("Enter the number of players: ");
             NumPlayers = console.readInt();
@@ -79,33 +81,21 @@ public class GameServer {
       
     }
 
-    public void setOrder() throws IOException{
-        Random random = new Random();
-        
-        int numeroRandom = random.nextInt(100); 
-         console.write("Random Number: " + numeroRandom);
-        
-
-        for (int i = 0; i < NumPlayers;i++){
-            Players.get(i).NumberStart = numeroRandom;
-            Players.get(i).Index = Players.get(i).playerIn.readInt();
-            
-        }
-        
+    public void setOrder(){//this is used in threadStartGame to define the order to play 
        Collections.sort(Players);
-
     }
     private void SearchPlayers() {
         setNumPlayers();
         try {
+             console.write("Waiting for players to connect...");
             for (int i = 0; i < NumPlayers; i++) {
-                console.write("Waiting for players to connect...");
+               
                 ServerPlayers newPlayer = new ServerPlayers(serverSocket.accept());
                 Players.add(newPlayer);
-
                 
-                ThreadCatchNameServer playerThread = new ThreadCatchNameServer(newPlayer, this);
-                playerThread.start();
+                ThreadCatchNameServer playerThread = new ThreadCatchNameServer(newPlayer,i, this);
+                playerThread.start();//each thread will recive the name selected and the number
+                threadsFirstMenuPlayers.add(playerThread);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,15 +103,8 @@ public class GameServer {
     }
     
     
-    private boolean NameExists(String newName, int MaximunPosition){
-        for (int i = 0; i < MaximunPosition; i++){
-            console.write(Players.get(i).name);
-            if (Players.get(i).name == null ? newName == null : Players.get(i).name.equals(newName)){return true;}
-        }
-        return false;
-    }
-    
-    private void loadCharacterNames(){
+
+    private void loadCharacterNames(){//funtion to load each name
         this.characterNames.add("Mario");
         this.characterNames.add("Luigi");
         this.characterNames.add("Bowser");
@@ -133,7 +116,24 @@ public class GameServer {
         this.characterNames.add("Toad");
         this.characterNames.add("Yoshi");
     }
-    private void SentGeneralInfo(){
+    
+    public ArrayList<String> getCharacterNames() {
+        System.out.println("Desde el sercver "+ characterNames);
+        return characterNames;
+    }
+
+    public ArrayList<ServerPlayers> getPlayers() {
+        return Players;
+    }
+
+    public int getNumeroRandom() {
+        return numeroRandom;
+    }
+    //end of name and number settings
+    //--------------------------------------------------------------------------
+    
+    
+    public void SentGeneralInfo(){
         try {
             String boardPlan = WriteGameBoard();
             
@@ -272,7 +272,7 @@ public class GameServer {
         return serializedArray; 
     }    
 
-    private void GameLoop() {
+    public void GameLoop() {
         boolean finished = false;
         try {
         while (!finished) {
@@ -366,10 +366,10 @@ public class GameServer {
             Players.get(i).playerOut.writeUTF(cha);
         }
     }
-     //BroadCoast funtion for chat
+    //BroadCoast funtion for chat
      public void broadCoast(Message msj){
         
-        for (ThreadServerChat player : players) {
+        for (ThreadServerChat player : playersChat) {
             try {
                 player.output.writeObject(msj);
             } catch (IOException ex) {
@@ -379,17 +379,7 @@ public class GameServer {
     
     }
 
-    public ArrayList<String> getCharacterNames() {
-        return characterNames;
-    }
 
-    public ArrayList<ServerPlayers> getPlayers() {
-        return Players;
-    }
-
-    public void setCharacterNames(ArrayList<String> characterNames) {
-        this.characterNames = characterNames;
-    }
     
 }
 
