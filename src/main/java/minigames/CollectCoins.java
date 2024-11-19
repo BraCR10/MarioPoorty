@@ -6,8 +6,11 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import screens.CollectCoinsScreen;
 import threads.ThreadTimerCollectCoins;
 
@@ -42,6 +45,11 @@ public class CollectCoins extends MiniGames{
     public void endGame() {
         this.board.setVisible(true);
         this.gamePanel.dispose();
+        try {
+            this.players.get(0).out.writeUTF("Done");
+        } catch (IOException ex) {
+            Logger.getLogger(BomberMario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -108,7 +116,7 @@ public class CollectCoins extends MiniGames{
     public int getScore() {
         return score;
     }
-
+    
     
 }
 

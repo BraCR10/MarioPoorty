@@ -1,7 +1,7 @@
 package minigames;
 
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 
@@ -17,6 +17,7 @@ public abstract class MiniGames {
     public int currentPlayers;
     public JFrame gamePanel;
     public Board board;
+    public boolean Done = false;
 
     public MiniGames(ArrayList<Player> players, String type, String description, int currentPlayers, JFrame gamePanel, Board board) {
         this.players = players;

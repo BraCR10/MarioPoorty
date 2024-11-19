@@ -1,21 +1,20 @@
 package minigames;
 
 
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 import screens.BomberMarioScreen;
-import threads.ThreadExplosionAnimation;
+import threads.ThreadExplotionAnimation;
 
 
-/**
- *
- * @author Brian
- */
 public class BomberMario extends MiniGames{
 
     Point[] randomChestPositions;
@@ -48,14 +47,12 @@ public class BomberMario extends MiniGames{
     }
     
     private void configurateScreen(){
-       try {
-            BomberMarioScreen screen = (BomberMarioScreen) gamePanel;
-            screen.setBoardSize(boardDisplaySize);
-            screen.drawScreen();
-            
-        } catch (Exception e) {
-           throw new UnsupportedOperationException("Must be a proper screen."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }  
+        
+        BomberMarioScreen screen = (BomberMarioScreen) gamePanel;
+        screen.setBoardSize(boardDisplaySize);
+        screen.drawScreen();
+        
+
     }
     
     @Override
@@ -70,6 +67,11 @@ public class BomberMario extends MiniGames{
     public void endGame() {
         this.board.setVisible(true);
         this.gamePanel.dispose();
+	try {
+            this.players.get(0).out.writeUTF("Done");
+        } catch (IOException ex) {
+            Logger.getLogger(BomberMario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -107,7 +109,7 @@ public class BomberMario extends MiniGames{
            screen.getMatrizButtons()[sourceX][sourceY].getIcon()==screen.getMisteryBox()){
             this.bombsCounter--;
             screen.getLabelCounter().setText("Enable bombs: "+this.bombsCounter);
-            Thread t = new ThreadExplosionAnimation(screen,sourceX,sourceY,randomChestPositions,explotionType);
+            Thread t = new ThreadExplotionAnimation(screen,sourceX,sourceY,randomChestPositions,explotionType);
             t.start();
             
 

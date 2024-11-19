@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package threads;
 
-/**
- *
- * @author Brian Ramirez
- */
 
-import com.mycompany.proyect2.GameServer;
+
+import MainGame.GameServer;
 
 
 public class ThreadCheckAllPlayersReadyServer extends Thread {

@@ -12,8 +12,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
+import java.io.IOException;
 import screens.GuessWhoScreen;
 
 /**
@@ -63,6 +64,11 @@ public class GuessWho extends MiniGames{
     public void endGame() {
         this.board.setVisible(true);
         this.gamePanel.dispose();
+        try {
+            this.players.get(0).out.writeUTF("Done");
+        } catch (IOException ex) {
+            Logger.getLogger(BomberMario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

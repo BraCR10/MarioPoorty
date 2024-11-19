@@ -1,21 +1,19 @@
 package minigames;
 
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
 import screens.WordSearchScreen;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import threads.ThreadTimerWordSearch;
 
 
-
-/**
- *
- * @author Brian
- */
 public class WordSearch extends MiniGames{
     ArrayList<String> wordsList;
     ArrayList<String> selectedWordsList;
@@ -51,21 +49,12 @@ public class WordSearch extends MiniGames{
             word=i;
             placeWord(word);
         }
-         //to show solution
-            System.out.println("\n Word search solution");
-            for (int i = 0; i < boardDisplaySize; i++) {
-                for (int j = 0; j < boardDisplaySize; j++) {
-                    System.out.print("|"+matrizChars[i][j]+"|");
-
-                }
-                System.out.println(" ");
-            }
+        
         for (int i = 0; i < boardDisplaySize; i++) {
             for (int j = 0; j < boardDisplaySize; j++) {
                  if (matrizChars[i][j] == ' ') 
                     matrizChars[i][j] = (char) ('A'+randomNumber.nextInt(26) ); //A - Z
             }
-           
         }
     
     
@@ -199,6 +188,11 @@ public class WordSearch extends MiniGames{
         this.board.setVisible(true);
         //Deleting the screen
         this.gamePanel.dispose();
+        try {
+            this.players.get(0).out.writeUTF("Done");
+        } catch (IOException ex) {
+            Logger.getLogger(BomberMario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -245,7 +239,7 @@ public class WordSearch extends MiniGames{
         return counterCollectedWords;
     }
 
-
+    
  
 }
 

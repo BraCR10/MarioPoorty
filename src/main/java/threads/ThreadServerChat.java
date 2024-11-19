@@ -1,10 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package threads;
 
-import com.mycompany.proyect2.GameServer;
+import MainGame.GameServer;
 import com.mycompany.proyect2.Message;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

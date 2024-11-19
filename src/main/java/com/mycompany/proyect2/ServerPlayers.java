@@ -3,14 +3,15 @@ package com.mycompany.proyect2;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
+import java.util.Comparator;
 
 public class ServerPlayers implements Comparable<ServerPlayers>{
     public Socket socket;
     
     public DataOutputStream playerOut;
     public DataInputStream playerIn;
-    
     
     
     public int positionStar = 0;

@@ -4,8 +4,11 @@ import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import screens.CatchTheCatScreen;
 import threads.ThreadCatJumpAnimation;
 
@@ -32,6 +35,11 @@ public class CatchTheCat extends MiniGames{
     public void endGame() {
         this.board.setVisible(true);
         this.gamePanel.dispose();
+        try {
+            this.players.get(0).out.writeUTF("Done");
+        } catch (IOException ex) {
+            Logger.getLogger(BomberMario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 
@@ -254,7 +262,7 @@ public class CatchTheCat extends MiniGames{
     public void setEnableCatMovement(boolean enableCatMovement) {
         this.enableCatMovement = enableCatMovement;
     }
-
+    
 }
     
 

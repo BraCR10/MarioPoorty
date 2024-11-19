@@ -29,7 +29,7 @@ public class BomberMarioScreen extends JFrame implements IScreenMethods{
 
 
     public BomberMarioScreen(BomberMario settings) {
-        this.settings=settings;
+        this.settings = settings;
     }
 
     @Override

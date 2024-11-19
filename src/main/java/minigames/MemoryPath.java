@@ -1,16 +1,15 @@
 package minigames;
 
-import com.mycompany.proyect2.Board;
-import com.mycompany.proyect2.Player;
+import BoardPawnsDice.Board;
+import MainGame.Player;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import screens.MemoryPathScreen;
 
-/**
- *
- * @author Brian
- */
 public class MemoryPath extends MiniGames {
     private static final int ROWS = 6;
     private static final int COLS = 3;
@@ -40,7 +39,6 @@ public class MemoryPath extends MiniGames {
 
     @Override
     public void startGame() {
-        this.board.setVisible(false);
         this.gamePanel = new MemoryPathScreen(this);
         configurePathMatrix();
         this.gamePanel.setVisible(true);
@@ -50,6 +48,11 @@ public class MemoryPath extends MiniGames {
     public void endGame() {
         this.board.setVisible(true);
         this.gamePanel.dispose();
+        try {
+            this.players.get(0).out.writeUTF("Done");
+        } catch (IOException ex) {
+            Logger.getLogger(BomberMario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

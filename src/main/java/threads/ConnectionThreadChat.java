@@ -2,7 +2,7 @@ package threads;
 
 
 
-import com.mycompany.proyect2.GameServer;
+import MainGame.GameServer;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;

@@ -1,7 +1,7 @@
 package threads;
 
 import com.mycompany.proyect2.Message;
-import com.mycompany.proyect2.Player;
+import MainGame.Player;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
