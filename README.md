@@ -68,16 +68,16 @@ This project brings together players in a thrilling board game experience comple
    - Navigate to the `src` folder and compile the server code:  
      ```bash
      javac src/main/java/MainGame/GameServer.java 
-     java src/main/java/MainGame/GameServer.java 
+     java -cp out MainGame.GameServer 
      ```  
-     or using a java compiler
+     or using a java IDLE
 2. **Run the Client**  
    - Compile and start the client application:  
      ```bash
      javac src/main/java/MainGame/Player.java
-     java src/main/java/MainGame/Player.java  
+     java -cp out MainGame.Player  
      ```
-     or using a java compiler
+     or using a java IDLE
 
 3. **Select a character and number to play**  
    
